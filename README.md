@@ -1,4 +1,6 @@
-sadly
-=====
+Sadly You Weren't Invited 
+======
 
-Sadly You Weren't Invited - a modest proposal for Nordic Game Jam 2014
+*- a modest proposal for Nordic Game Jam 2014*
+
+Just when you thought 
