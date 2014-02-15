@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class InteractableObject : MonoBehaviour {
+public class Interactable : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -11,9 +11,5 @@ public abstract class InteractableObject : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
-	}
-
-	void Interact() {
-		// Go through all NPCs and check who saw what
 	}
 }
