@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour {
 		_controller.Move(movement * Speed * Time.deltaTime);
 
 		if (!_controller.isGrounded)
-			_controller.Move (this.Gravity* Time.deltaTime);
+			_controller.Move (Physics.gravity * Time.deltaTime);
 	}
 
 	void OnControllerColliderHit(ControllerColliderHit hit) {
