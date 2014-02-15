@@ -2,278 +2,295 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class NPCController : MonoBehaviour {
-	public GameObject Player;
-	public float HappinessDecrement = 5;
-	public float HappinessIncrement = 1;
-	public static IList<NPCController> AllNPCs = new List<NPCController>();
-	public float EnterRoomPenalty = 5;
-	public float HostileThreshold = 20;
-	public float FOVSizeInDegrees = 90;
+public class NPCController : MonoBehaviour
+{
+    public GameObject Player;
+    public float HappinessDecrement = 5;
+    public float HappinessIncrement = 1;
+    public static IList<NPCController> AllNPCs = new List<NPCController>();
+    public float EnterRoomPenalty = 5;
+    public float HostileThreshold = 20;
+    public float FOVSizeInDegrees = 90;
+    public float ChatAvoidance = 10000;
 
-	private static float _privateSphereThreshold = 1.5f;
-	private bool _hostile = true;
-	private float _happiness = 100;
-	private bool _hasSeenPlayer = false;
-	private NpcState _state;
+    private static float _privateSphereThreshold = 1.5f;
+    private bool _hostile = true;
+    private float _happiness = 100;
+    private bool _hasSeenPlayer = false;
+    private NpcState _state;
 
-	public bool CanTalk {
-		get {
-			return _state.CanTalk;
-		}
-	}
+    public bool CanTalk
+    {
+        get
+        {
+            return _state.CanTalk;
+        }
+    }
 
-	public abstract class NpcState {
-		protected NPCController npc;
+    public abstract class NpcState
+    {
+        protected NPCController Npc;
 
-		protected NpcState(NPCController npc)
-		{
-			this.npc = npc;
-			CanTalk = false;
-		}
+        protected NpcState(NPCController npc)
+        {
+            Npc = npc;
+            CanTalk = false;
+        }
 
-		protected NpcState(NPCController npc, bool canTalk)
-		{
-			this.npc = npc;
-			CanTalk = canTalk;
-		}
+        protected NpcState(NPCController npc, bool canTalk)
+        {
+            Npc = npc;
+            CanTalk = canTalk;
+        }
 
-		abstract public void FixedUpdate ();
+        abstract public void FixedUpdate();
 
-		public abstract void PrivacyInvaded ();
+        public abstract void PrivacyInvaded();
 
-		public readonly bool CanTalk;
-	}
+        public readonly bool CanTalk;
+    }
 
-	class IdleState : NpcState
-	{
-		public IdleState (NPCController npcController)
-			: base(npcController, true)
-		{
-		}
+    class IdleState : NpcState
+    {
+        public IdleState(NPCController npcController)
+            : base(npcController, true)
+        {
+            Npc.renderer.material.color = new Color(1.0f, 0.0f, 0.0f);
+        }
 
-		bool WantsToTalk ()
-		{
-			// TODO(jrgfogh): Fix this. It's dependent on game speed and untweakable.
-			return Random.Range (0, 100) == 0;
-		}
+        bool WantsToTalk()
+        {
+            // TODO(jrgfogh): Fix this. It's dependent on game speed and untweakable.
+            return Random.Range(0, (int)(Npc.ChatAvoidance)) == 0;
+        }
 
-		NPCController FindClosestPossibleConversationPartner ()
-		{
-			return AllNPCs.Where (otherNpc => otherNpc.CanTalk).OrderBy (otherNpc => npc.GetDistance (otherNpc.gameObject)).FirstOrDefault ();
-		}
+        NPCController FindClosestPossibleConversationPartner()
+        {
+            return
+                AllNPCs.Where(otherNpc => otherNpc != Npc && otherNpc.CanTalk)
+                    .OrderBy(otherNpc => Npc.GetDistance(otherNpc.gameObject))
+                    .FirstOrDefault();
+        }
 
-		void InitiateTalk (NPCController conversationPartner)
-		{
-			conversationPartner._state = new WaitingState (conversationPartner);
-			npc._state = new ChatWalkingState (npc);
-		}
+        void InitiateTalk(NPCController conversationPartner)
+        {
+            conversationPartner._state = new WaitingState(conversationPartner);
+            Npc._state = new ChatWalkingState(Npc);
+        }
 
-		void TryToInitiateTalk ()
-		{
-			var conversationPartner =
-				FindClosestPossibleConversationPartner ();
-			if (conversationPartner != null) {
-				InitiateTalk (conversationPartner);
-			}
-		}
+        void TryToInitiateTalk()
+        {
+            var conversationPartner =
+                FindClosestPossibleConversationPartner();
+            if (conversationPartner != null)
+            {
+                InitiateTalk(conversationPartner);
+            }
+        }
 
-		public override void FixedUpdate ()
-		{
-			if (WantsToTalk()) {
-				TryToInitiateTalk();
-			}
-		}
+        public override void FixedUpdate()
+        {
+            if (WantsToTalk())
+            {
+                TryToInitiateTalk();
+            }
+        }
 
-		public override void PrivacyInvaded ()
-		{
-			npc.DecreaseHappiness();
-		}
-	}
-	
-	// TODO(jrgfogh): This isn't used yet.
-	class ChatWalkingState : NpcState
-	{
-		public ChatWalkingState (NPCController npcController)
-			: base(npcController)
-		{
-		}
-		
-		public override void FixedUpdate ()
-		{
-		}
+        public override void PrivacyInvaded()
+        {
+            Npc.DecreaseHappiness();
+        }
+    }
 
-		public override void PrivacyInvaded ()
-		{
-			npc.DecreaseHappiness();
-		}
-	}
+    // TODO(jrgfogh): This isn't used yet.
+    class ChatWalkingState : NpcState
+    {
+        public ChatWalkingState(NPCController npcController)
+            : base(npcController)
+        {
+            Npc.renderer.material.color = new Color(0.0f, 1.0f, 0.0f);
+        }
 
-	class WalkingState : NpcState
-	{
-		private readonly NPCController _conversationPartner;
+        public override void FixedUpdate()
+        {
+        }
 
-		public WalkingState (NPCController npcController, NPCController conversationPartner)
-			: base(npcController)
-		{
-			_conversationPartner = conversationPartner;
-		}
+        public override void PrivacyInvaded()
+        {
+            Npc.DecreaseHappiness();
+        }
+    }
 
-		private void InitiateTalk ()
-		{
-		    var conversationLength = Random.Range(10000, 15000);
-		    var conversationEndTime = Time.time + conversationLength;
-			npc._state = new ChattingState (npc, _conversationPartner, conversationEndTime);
-            _conversationPartner._state = new ChattingState(_conversationPartner, npc, conversationEndTime);
-		}
+    class IdleWalkingState : NpcState
+    {
+        private readonly NPCController _conversationPartner;
 
-		public override void FixedUpdate ()
-		{
-			// TODO(jrgfogh): Call Kim's script here.
-			if (false)
-			{
-				InitiateTalk();
-			}
-		}
-		
-		public override void PrivacyInvaded ()
-		{
-			npc.DecreaseHappiness();
-		}
-	}
-	
-	class WaitingState : NpcState
-	{
-		public WaitingState (NPCController npcController)
-			: base(npcController)
-		{
-		}
-		
-		public override void FixedUpdate ()
-		{
-		}
+        public IdleWalkingState(NPCController npcController, NPCController conversationPartner)
+            : base(npcController)
+        {
+            _conversationPartner = conversationPartner;
+        }
 
-		public override void PrivacyInvaded ()
-		{
-			npc.DecreaseHappiness();
-		}
-	}
+        private void InitiateTalk()
+        {
+            var conversationLength = Random.Range(10000, 15000);
+            var conversationEndTime = Time.time + conversationLength;
+            Npc._state = new ChattingState(Npc, _conversationPartner, conversationEndTime);
+            _conversationPartner._state = new ChattingState(_conversationPartner, Npc, conversationEndTime);
+        }
 
-	class ChattingState : NpcState
-	{
-		private readonly NPCController _conversationPartner;
-	    private readonly float _conversationEndTime;
+        public override void FixedUpdate()
+        {
+            // TODO(jrgfogh): Call Kim's script here.
+            if (false)
+            {
+                InitiateTalk();
+            }
+        }
 
-	    public ChattingState (NPCController npcController, NPCController conversationPartner, float conversationEndTime)
-			: base(npcController)
-		{
-		    _conversationPartner = conversationPartner;
-		    _conversationEndTime = conversationEndTime;
-		}
+        public override void PrivacyInvaded()
+        {
+            Npc.DecreaseHappiness();
+        }
+    }
 
-	    public override void FixedUpdate ()
-		{
-	        if (Time.time > _conversationEndTime)
-	        {
-	            EndConversation();
-	        }
-		}
+    class WaitingState : NpcState
+    {
+        public WaitingState(NPCController npcController)
+            : base(npcController)
+        {
+            Npc.renderer.material.color = new Color(0.0f, 0.0f, 1.0f);
+        }
 
-	    private void EndConversation()
-	    {
+        public override void FixedUpdate()
+        {
+        }
+
+        public override void PrivacyInvaded()
+        {
+            Npc.DecreaseHappiness();
+        }
+    }
+
+    class ChattingState : NpcState
+    {
+        private readonly NPCController _conversationPartner;
+        private readonly float _conversationEndTime;
+
+        public ChattingState(NPCController npcController, NPCController conversationPartner, float conversationEndTime)
+            : base(npcController)
+        {
+            Npc.renderer.material.color = new Color(1.0f, 1.0f, 1.0f);
+            _conversationPartner = conversationPartner;
+            _conversationEndTime = conversationEndTime;
+        }
+
+        public override void FixedUpdate()
+        {
+            if (Time.time > _conversationEndTime)
+            {
+                EndConversation();
+            }
+        }
+
+        private void EndConversation()
+        {
             // TODO(jrgfogh): Move somewhere else?
-	        npc._state = new IdleState(npc);
-	    }
+            Npc._state = new IdleState(Npc);
+        }
 
-	    public override void PrivacyInvaded ()
-		{
-			npc.DecreaseHappiness();
-		}
-	}
+        public override void PrivacyInvaded()
+        {
+            Npc.DecreaseHappiness();
+        }
+    }
 
-	float GetDistance(GameObject that)
-	{
-		Vector3 distance = that.transform.position - transform.position;
-		return distance.magnitude;
-	}
+    float GetDistance(GameObject that)
+    {
+        Vector3 distance = that.transform.position - transform.position;
+        return distance.magnitude;
+    }
 
-	float GetDistanceToPlayer() {
-		return GetDistance (Player);
-	}
-	
-	bool IsInFOV(GameObject that) {
-		var targetDirection = transform.position - that.transform.position;
-		targetDirection.y = 0;
-		var angle = Vector3.Angle (transform.forward, targetDirection);
+    float GetDistanceToPlayer()
+    {
+        return GetDistance(Player);
+    }
+
+    bool IsInFOV(GameObject that)
+    {
+        var targetDirection = transform.position - that.transform.position;
+        targetDirection.y = 0;
+        var angle = Vector3.Angle(transform.forward, targetDirection);
         return Mathf.Abs(angle + FOVSizeInDegrees / 2) < FOVSizeInDegrees;
-	}
+    }
 
-	void IncreaseHappiness(float howMuch) {
-		_happiness = Mathf.Clamp (_happiness + howMuch, 0, 100);
-	}
+    void IncreaseHappiness(float howMuch)
+    {
+        _happiness = Mathf.Clamp(_happiness + howMuch, 0, 100);
+    }
 
-	void IncreaseHappiness() {
-		IncreaseHappiness (HappinessIncrement * Time.deltaTime);
-	}
+    void IncreaseHappiness()
+    {
+        IncreaseHappiness(HappinessIncrement * Time.deltaTime);
+    }
 
-	void DecreaseHappiness(float howMuch) {
-		_happiness -= howMuch;
+    void DecreaseHappiness(float howMuch)
+    {
+        _happiness -= howMuch;
 
-		if (_happiness < 0) {
-			_happiness = 0;
-		}
-	}
+        if (_happiness < 0)
+        {
+            _happiness = 0;
+        }
+    }
 
-	void DecreaseHappiness() {
-		DecreaseHappiness (HappinessDecrement * Time.deltaTime);
-	}
+    void DecreaseHappiness()
+    {
+        DecreaseHappiness(HappinessDecrement * Time.deltaTime);
+    }
 
-	void SeePlayer ()
-	{
-		DecreaseHappiness (EnterRoomPenalty);
-		_hasSeenPlayer = true;
-	}
+    void SeePlayer()
+    {
+        DecreaseHappiness(EnterRoomPenalty);
+        _hasSeenPlayer = true;
+    }
 
-	#region UNITY PRIMITIVES
-	void FixedUpdate() {
-		_state.FixedUpdate ();
-		if (GetDistanceToPlayer () < _privateSphereThreshold) {
-			_state.PrivacyInvaded();
-			// TODO(jrgfogh): Move this to State?
-			if (_hostile)
-			{
-				// If the NPC is hostile and the player is close, they will try to push her away
-				Player.rigidbody.AddForce(1.0f, 0.0f, 0f);
-			}
-		} else {
-			// TODO(jrgfogh): Move this to State?
-			IncreaseHappiness();
-		}
-		
-		if (_happiness < HostileThreshold) {
-			_hostile = true;
-		}
+    #region UNITY PRIMITIVES
+    void FixedUpdate()
+    {
+        _state.FixedUpdate();
+        if (GetDistanceToPlayer() < _privateSphereThreshold)
+        {
+            _state.PrivacyInvaded();
+            // TODO(jrgfogh): Move this to State?
+            if (_hostile)
+            {
+                // If the NPC is hostile and the player is close, they will try to push her away
+                Player.rigidbody.AddForce(1.0f, 0.0f, 0f);
+            }
+        }
+        else
+        {
+            // TODO(jrgfogh): Move this to State?
+            IncreaseHappiness();
+        }
 
-		if (!_hasSeenPlayer && IsInFOV (Player))
-		{
-			SeePlayer ();
-		}
+        if (_happiness < HostileThreshold)
+        {
+            _hostile = true;
+        }
 
-		if (_happiness < 80) {
-			renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
-		} else {
-			renderer.material.color = new Color (1.0f, 1.0f, 1.0f);
-		}
+        if (!_hasSeenPlayer && IsInFOV(Player))
+        {
+            SeePlayer();
+        }
+    }
 
-		if (_hostile) {
-			renderer.material.color = new Color(0.0f, 0.0f, 0.0f);
-		}
-	}
-
-	// Use this for initialization
-	void Start () {
-		AllNPCs.Add (this);
-		_state = new IdleState (this);
-	}
-	#endregion
+    // Use this for initialization
+    void Start()
+    {
+        AllNPCs.Add(this);
+        _state = new IdleState(this);
+    }
+    #endregion
 }
