@@ -26,16 +26,14 @@ public class PlayerController : MonoBehaviour {
 
 		var movement = new Vector3 (-moveHorizontal, 0, moveVertical) + new Vector3(Mathf.Sin(_time.x * 3), 0, Mathf.Cos(_time.y * 3)) * (Beverages*0.04f);
 		_controller.Move(movement * Speed * Time.deltaTime);
-
-		if( Mathf.Abs(moveHorizontal + moveVertical) > 0.00001f )
-			transform.LookAt(transform.position + new Vector3 (-moveHorizontal, 0, moveVertical));
+		transform.LookAt(transform.position + movement);
 
 		if (!_controller.isGrounded)
 			_controller.Move (Physics.gravity * Time.deltaTime);
 	}
 
 	void OnControllerColliderHit(ControllerColliderHit hit) {
-		Rigidbody body = hit.collider.attachedRigidbody;
+		var body = hit.collider.attachedRigidbody;
 		if (body == null || body.isKinematic)
 			return;
 
@@ -47,7 +45,7 @@ public class PlayerController : MonoBehaviour {
 		if (hit.moveDirection.y < -0.3F)
 			return;
 		
-		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+		var pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
 		body.velocity = pushDir * PushPower;
 	}
 
@@ -57,7 +55,7 @@ public class PlayerController : MonoBehaviour {
 			var interactables = GameObject.FindGameObjectsWithTag ("interactable");
 
 			foreach(var obj in interactables) {
-				Vector3 dist = obj.transform.position - this.transform.position;
+				var dist = obj.transform.position - this.transform.position;
 
 				if (dist.magnitude < 1.5) {
 
@@ -73,4 +71,8 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 	}
+
+    public void PushPlayerAway(NPCController npc)
+    {
+    }
 }

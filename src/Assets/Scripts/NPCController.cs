@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using Random = UnityEngine.Random;
@@ -52,6 +50,12 @@ public class NPCController : MonoBehaviour
         public abstract void PrivacyInvaded();
 
         public readonly bool CanTalk;
+
+        public virtual void PushPlayerAway(GameObject player)
+        {
+            var controller = player.GetComponent<PlayerController>();
+            controller.PushPlayerAway(Npc);
+        }
     }
 
     class IdleState : NpcState
@@ -271,9 +275,8 @@ public class NPCController : MonoBehaviour
             // TODO(jrgfogh): Move this to State?
             if (_hostile)
             {
-                // If the NPC is hostile and the player is close, they will try to push her away
-                // TODO(jrgfogh): Push the player away.
-                Player.rigidbody.AddForce(1.0f, 0.0f, 0f);
+                // If the NPC is hostile and the player is close, they will try to push her away.
+                _state.PushPlayerAway(Player);
             }
         }
         else
