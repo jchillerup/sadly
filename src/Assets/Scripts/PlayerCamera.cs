@@ -13,8 +13,8 @@ public class PlayerCamera : MonoBehaviour {
 
 		if( d.magnitude > MaxDistance ) {
 			Vector3 newPosition = this.transform.position;
-			newPosition.x += d.x * 0.01f;
-			newPosition.z += d.y * 0.01f;
+			newPosition.x += d.x * Speed * Time.deltaTime;
+			newPosition.z += d.y * Speed * Time.deltaTime;
 			this.transform.position = newPosition;
 		}
 		
