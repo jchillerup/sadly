@@ -18,6 +18,7 @@ public class NPCController : MonoBehaviour {
 	private static float _privateSphereThreshold = 1.5f;
 	private int _happiness = 100;
 	private bool _hostile = false;
+	private bool _hasSeenPlayer = false;
 
 	float GetDistanceToPlayer() {
 		Vector3 distance = Player.transform.position - this.transform.position;
@@ -67,40 +68,36 @@ public class NPCController : MonoBehaviour {
 		if (this._happiness < 20) {
 			this._hostile = true;
 		}
-	}
 
-	/// <summary>
-	/// This should only be called from the player class.
-	/// </summary>
-	internal void EnterRoom(GameObject player)
-	{
-		if (IsVisible (player))
+		if (!_hasSeenPlayer && IsVisible (Player))
 		{
-			decreaseHappiness(EnterRoomPenalty);
+			EnterRoom(Player);
 		}
-	}
 
-	// Use this for initialization
-	void Start () {
-		AllNPCs.Add (this);
-	}
-	
-	// Update is called once per frame
-	void Update () {
 		if (this._happiness < 80) {
 			this.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 		} else {
 			this.renderer.material.color = new Color (1.0f, 1.0f, 1.0f);
 		}
-
+		
 		if (this._hostile) {
 			this.renderer.material.color = new Color(0.0f, 0.0f, 0.0f);
-
+			
 			// If the NPC is hostile and the player is close, they will try to push her away
 			if (GetDistanceToPlayer() < _privateSphereThreshold) {
 				Player.rigidbody.AddForce(1.0f, 0.0f, 0f);
 			}
 		}
+	}
+
+	void EnterRoom(GameObject player)
+	{
+		decreaseHappiness(EnterRoomPenalty);
+	}
+
+	// Use this for initialization
+	void Start () {
+		AllNPCs.Add (this);
 	}
 	#endregion
 }
