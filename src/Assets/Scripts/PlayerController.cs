@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour {
 
 		var movement = new Vector3 (-moveHorizontal, 0, moveVertical) + new Vector3(Mathf.Sin(_time.x * 3), 0, Mathf.Cos(_time.y * 3)) * (Beverages*0.04f);
 		_controller.Move(movement * Speed * Time.deltaTime);
+		transform.LookAt(transform.position + movement);
 
 		if (!_controller.isGrounded)
 			_controller.Move (Physics.gravity * Time.deltaTime);
