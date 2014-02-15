@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public enum NPCState {
 	IDLE,
@@ -12,6 +13,7 @@ public class NPCController : MonoBehaviour {
 	public NPCState State = NPCState.IDLE;
 	public int HappinessIncrement = 1;
 	public static IList<NPCController> AllNPCs = new List<NPCController>();
+	public int EnterRoomPenalty = 5;
 
 	private static float _privateSphereThreshold = 1.5f;
 	private int _happiness = 100;
@@ -64,6 +66,17 @@ public class NPCController : MonoBehaviour {
 		
 		if (this._happiness < 20) {
 			this._hostile = true;
+		}
+	}
+
+	/// <summary>
+	/// This should only be called from the player class.
+	/// </summary>
+	internal void EnterRoom(GameObject player)
+	{
+		if (IsVisible (player))
+		{
+			decreaseHappiness(EnterRoomPenalty);
 		}
 	}
 

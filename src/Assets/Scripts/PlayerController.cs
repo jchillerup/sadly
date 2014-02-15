@@ -7,6 +7,15 @@ public class PlayerController : MonoBehaviour {
 
 	private CharacterController _controller;
 
+	/// <summary>
+	/// Call this to make the player enter the room.
+	/// </summary>
+	void EnterRoom() {
+		foreach (var npc in NPCController.AllNPCs) {
+			npc.EnterRoom(this);
+		}
+	}
+
 	void FixedUpdate () {
 		if (_controller == null)
 			_controller = gameObject.GetComponent<CharacterController> ();
@@ -19,7 +28,5 @@ public class PlayerController : MonoBehaviour {
 
 		if (!_controller.isGrounded)
 			_controller.Move (this.Gravity* Time.deltaTime);
-
-
 	}
 }
