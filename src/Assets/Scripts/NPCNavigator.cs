@@ -1,12 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class NPCNavigator : MonoBehaviour
 {
-    public Transform Target;
-
     private NavMeshAgent _agent;
     private CharacterController _controller;
+
+	public void SetDestination (Vector3 destination)
+	{
+	    _agent.destination = destination;
+	}
 
     // Use this for initialization
     void Start()
@@ -35,11 +40,6 @@ public class NPCNavigator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Target != null) // Walk to target
-        {
-            _agent.destination = Target.position;
-        }
-
         if (!_controller.isGrounded)
         {
             _controller.Move(Physics.gravity * Time.deltaTime);
@@ -48,6 +48,13 @@ public class NPCNavigator : MonoBehaviour
 
     public bool HasReachedTarget()
     {
-        return _agent.remainingDistance <= _agent.stoppingDistance;
+		return !float.IsPositiveInfinity(_agent.remainingDistance) &&
+						_agent.pathStatus == NavMeshPathStatus.PathComplete &&
+						_agent.remainingDistance < _agent.stoppingDistance + Single.Epsilon;
+    }
+
+    public void StopMoving()
+    {
+        _agent.Stop();
     }
 }
