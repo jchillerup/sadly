@@ -12,3 +12,4 @@ src/src.userprefs
 # emacs stuff
 *~
 *.userprefs
+/src/src-csharp.suo
