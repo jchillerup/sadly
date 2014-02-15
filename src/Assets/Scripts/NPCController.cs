@@ -13,6 +13,7 @@ public class NPCController : MonoBehaviour
     public float HostileThreshold = 20;
     public float FOVSizeInDegrees = 90;
     public float ChatAvoidance = 10000;
+    public float GlarePeriod = 5000;
     public NPCNavigator Navigator;
 
     private static float _privateSphereThreshold = 1.5f;
@@ -55,6 +56,25 @@ public class NPCController : MonoBehaviour
         {
             var controller = player.GetComponent<PlayerController>();
             controller.PushPlayerAway(Npc);
+            Npc._state = new PushingState(Npc);
+        }
+    }
+
+    class PushingState : NpcState
+    {
+        public PushingState(NPCController npc)
+            : base(npc)
+        {
+        }
+
+        public override void FixedUpdate()
+        {
+            // TODO(jrgfogh): Check when we're done.
+            Npc._state = new GlaringState(Npc);
+        }
+
+        public override void PrivacyInvaded()
+        {
         }
     }
 
@@ -112,16 +132,28 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    // TODO(jrgfogh): This isn't used yet.
-    class IdleWalkingState : NpcState
+    class GlaringState : NpcState
     {
-        public IdleWalkingState(NPCController npcController)
+        private readonly float _startTime;
+
+        public GlaringState(NPCController npcController)
             : base(npcController)
         {
+            _startTime = Time.time;
         }
 
         public override void FixedUpdate()
         {
+            if (Time.time > _startTime + Npc.GlarePeriod)
+            {
+                Npc._state = new IdleState(Npc);
+            }
+            else
+            {
+                var glareDirection = Npc.Player.transform.position - Npc.transform.position;
+                glareDirection.y = 0;
+                Npc.transform.forward = glareDirection;
+            }
         }
 
         public override void PrivacyInvaded()
@@ -130,7 +162,7 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    class ChatWalkingState: NpcState
+    class ChatWalkingState : NpcState
     {
         private readonly NPCController _conversationPartner;
 
@@ -212,6 +244,12 @@ public class NPCController : MonoBehaviour
         public override void PrivacyInvaded()
         {
             Npc.DecreaseHappiness();
+        }
+
+        public override void PushPlayerAway(GameObject player)
+        {
+            base.PushPlayerAway(player);
+            _conversationPartner._state = new IdleState(_conversationPartner);
         }
     }
 
