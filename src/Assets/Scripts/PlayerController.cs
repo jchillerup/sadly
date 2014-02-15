@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 _moveSpeed = new Vector3();
 	private Vector3 _pushSpeed = new Vector3();
 
+	private int Points;
+
 	Vector2 _time = new Vector2(), _timeAcceleration = new Vector2();
 
 	void FixedUpdate () {
@@ -89,4 +91,13 @@ public class PlayerController : MonoBehaviour {
     {
 		_pushSpeed += transform.position - npc.transform.position;
     }
+
+	public void AwardPoints(int numPoints) {
+		// TODO: Fireworks!
+		this.Points += numPoints;
+	}
+
+	public int GetPoints() {
+		return this.Points;
+	}
 }

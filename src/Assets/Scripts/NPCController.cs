@@ -90,7 +90,13 @@ public class NPCController : MonoBehaviour
         {
             // TODO(jrgfogh): Fix this. It's dependent on game speed and untweakable.
             return Random.Range(0, (int)(Npc.ChatAvoidance)) == 0;
-        }
+		}
+
+		bool WantsToWalk()
+		{
+			// TODO(jrgfogh): Fix this. It's dependent on game speed and untweakable.
+			return Random.Range(0, (int)(Npc.ChatAvoidance / 3)) == 0;
+		}
 
         NPCController FindClosestPossibleConversationPartner()
         {
@@ -118,12 +124,20 @@ public class NPCController : MonoBehaviour
             }
         }
 
+		bool IsStationary ()
+		{
+			return Npc.Navigator.HasReachedTarget ();
+		}
+
         public override void FixedUpdate()
         {
-            if (WantsToTalk())
-            {
-                TryToInitiateTalk();
-            }
+			if (IsStationary ()) {
+				if (WantsToWalk ()) {
+					Npc.Navigator.WalkToRandomTarget ();
+				} else if (WantsToTalk ()) {
+					TryToInitiateTalk ();
+				}
+			}
         }
 
         public override void PrivacyInvaded()
@@ -139,7 +153,7 @@ public class NPCController : MonoBehaviour
         public GlaringState(NPCController npcController)
             : base(npcController)
         {
-            _startTime = Time.time;
+            _startTime = Time.time * 1000;
         }
 
         public override void FixedUpdate()
@@ -177,7 +191,7 @@ public class NPCController : MonoBehaviour
         {
             // TODO(jrgfogh): Make the conversation length configurable.
             var conversationLength = Random.Range(10000, 15000);
-            var conversationEndTime = Time.time + conversationLength;
+			var conversationEndTime = Time.time * 1000 + conversationLength;
             Npc._state = new ChattingState(Npc, _conversationPartner, conversationEndTime);
             _conversationPartner._state = new ChattingState(_conversationPartner, Npc, conversationEndTime);
         }
@@ -229,7 +243,7 @@ public class NPCController : MonoBehaviour
 
         public override void FixedUpdate()
         {
-            if (Time.time > _conversationEndTime)
+			if (Time.time * 1000 > _conversationEndTime)
             {
                 EndConversation();
             }
