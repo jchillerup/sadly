@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void OnControllerColliderHit(ControllerColliderHit hit) {
-		Rigidbody body = hit.collider.attachedRigidbody;
+		var body = hit.collider.attachedRigidbody;
 		if (body == null || body.isKinematic)
 			return;
 
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour {
 		if (hit.moveDirection.y < -0.3F)
 			return;
 		
-		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+		var pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
 		body.velocity = pushDir * PushPower;
 	}
 
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour {
 			var interactables = GameObject.FindGameObjectsWithTag ("interactable");
 
 			foreach(var obj in interactables) {
-				Vector3 dist = obj.transform.position - this.transform.position;
+				var dist = obj.transform.position - this.transform.position;
 
 				if (dist.magnitude < 1.5) {
 
@@ -71,4 +71,8 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 	}
+
+    public void PushPlayerAway(NPCController npc)
+    {
+    }
 }
