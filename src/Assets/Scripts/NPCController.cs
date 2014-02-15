@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
 using System.Linq;
 
 public class NPCController : MonoBehaviour {
@@ -17,24 +15,24 @@ public class NPCController : MonoBehaviour {
 	private bool _hostile = true;
 	private float _happiness = 100;
 	private bool _hasSeenPlayer = false;
-	private NPCState state;
+	private NpcState _state;
 
 	public bool CanTalk {
 		get {
-			return state.CanTalk;
+			return _state.CanTalk;
 		}
 	}
 
-	public abstract class NPCState {
+	public abstract class NpcState {
 		protected NPCController npc;
 
-		protected NPCState(NPCController npc)
+		protected NpcState(NPCController npc)
 		{
 			this.npc = npc;
 			CanTalk = false;
 		}
 
-		protected NPCState(NPCController npc, bool canTalk)
+		protected NpcState(NPCController npc, bool canTalk)
 		{
 			this.npc = npc;
 			CanTalk = canTalk;
@@ -47,7 +45,7 @@ public class NPCController : MonoBehaviour {
 		public readonly bool CanTalk;
 	}
 
-	class IdleState : NPCState
+	class IdleState : NpcState
 	{
 		public IdleState (NPCController npcController)
 			: base(npcController, true)
@@ -57,7 +55,7 @@ public class NPCController : MonoBehaviour {
 		bool WantsToTalk ()
 		{
 			// TODO(jrgfogh): Fix this. It's dependent on game speed and untweakable.
-			return UnityEngine.Random.Range (0, 100) == 0;
+			return Random.Range (0, 100) == 0;
 		}
 
 		NPCController FindClosestPossibleConversationPartner ()
@@ -67,8 +65,8 @@ public class NPCController : MonoBehaviour {
 
 		void InitiateTalk (NPCController conversationPartner)
 		{
-			conversationPartner.state = new WaitingState (conversationPartner);
-			npc.state = new ChatWalkingState (npc);
+			conversationPartner._state = new WaitingState (conversationPartner);
+			npc._state = new ChatWalkingState (npc);
 		}
 
 		void TryToInitiateTalk ()
@@ -94,7 +92,7 @@ public class NPCController : MonoBehaviour {
 	}
 	
 	// TODO(jrgfogh): This isn't used yet.
-	class ChatWalkingState : NPCState
+	class ChatWalkingState : NpcState
 	{
 		public ChatWalkingState (NPCController npcController)
 			: base(npcController)
@@ -111,9 +109,9 @@ public class NPCController : MonoBehaviour {
 		}
 	}
 
-	class WalkingState : NPCState
+	class WalkingState : NpcState
 	{
-		private NPCController _conversationPartner;
+		private readonly NPCController _conversationPartner;
 
 		public WalkingState (NPCController npcController, NPCController conversationPartner)
 			: base(npcController)
@@ -123,8 +121,10 @@ public class NPCController : MonoBehaviour {
 
 		private void InitiateTalk ()
 		{
-			npc.state = new ChattingState (npc, _conversationPartner);
-			_conversationPartner.state = new ChattingState (_conversationPartner, npc);
+		    var conversationLength = Random.Range(10000, 15000);
+		    var conversationEndTime = Time.time + conversationLength;
+			npc._state = new ChattingState (npc, _conversationPartner, conversationEndTime);
+            _conversationPartner._state = new ChattingState(_conversationPartner, npc, conversationEndTime);
 		}
 
 		public override void FixedUpdate ()
@@ -142,7 +142,7 @@ public class NPCController : MonoBehaviour {
 		}
 	}
 	
-	class WaitingState : NPCState
+	class WaitingState : NpcState
 	{
 		public WaitingState (NPCController npcController)
 			: base(npcController)
@@ -159,21 +159,33 @@ public class NPCController : MonoBehaviour {
 		}
 	}
 
-	class ChattingState : NPCState
+	class ChattingState : NpcState
 	{
-		private NPCController _conversationPartner;
+		private readonly NPCController _conversationPartner;
+	    private readonly float _conversationEndTime;
 
-		public ChattingState (NPCController npcController, NPCController conversationPartner)
+	    public ChattingState (NPCController npcController, NPCController conversationPartner, float conversationEndTime)
 			: base(npcController)
 		{
-			_conversationPartner = conversationPartner;
-		}
-		
-		public override void FixedUpdate ()
-		{
+		    _conversationPartner = conversationPartner;
+		    _conversationEndTime = conversationEndTime;
 		}
 
-		public override void PrivacyInvaded ()
+	    public override void FixedUpdate ()
+		{
+	        if (Time.time > _conversationEndTime)
+	        {
+	            EndConversation();
+	        }
+		}
+
+	    private void EndConversation()
+	    {
+            // TODO(jrgfogh): Move somewhere else?
+	        npc._state = new IdleState(npc);
+	    }
+
+	    public override void PrivacyInvaded ()
 		{
 			npc.DecreaseHappiness();
 		}
@@ -181,7 +193,7 @@ public class NPCController : MonoBehaviour {
 
 	float GetDistance(GameObject that)
 	{
-		Vector3 distance = that.transform.position - this.transform.position;
+		Vector3 distance = that.transform.position - transform.position;
 		return distance.magnitude;
 	}
 
@@ -205,10 +217,10 @@ public class NPCController : MonoBehaviour {
 	}
 
 	void DecreaseHappiness(float howMuch) {
-		this._happiness -= howMuch;
+		_happiness -= howMuch;
 
-		if (this._happiness < 0) {
-			this._happiness = 0;
+		if (_happiness < 0) {
+			_happiness = 0;
 		}
 	}
 
@@ -224,9 +236,9 @@ public class NPCController : MonoBehaviour {
 
 	#region UNITY PRIMITIVES
 	void FixedUpdate() {
-		state.FixedUpdate ();
+		_state.FixedUpdate ();
 		if (GetDistanceToPlayer () < _privateSphereThreshold) {
-			state.PrivacyInvaded();
+			_state.PrivacyInvaded();
 			// TODO(jrgfogh): Move this to State?
 			if (_hostile)
 			{
@@ -238,8 +250,8 @@ public class NPCController : MonoBehaviour {
 			IncreaseHappiness();
 		}
 		
-		if (this._happiness < HostileThreshold) {
-			this._hostile = true;
+		if (_happiness < HostileThreshold) {
+			_hostile = true;
 		}
 
 		if (!_hasSeenPlayer && IsInFOV (Player))
@@ -247,21 +259,21 @@ public class NPCController : MonoBehaviour {
 			SeePlayer ();
 		}
 
-		if (this._happiness < 80) {
-			this.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
+		if (_happiness < 80) {
+			renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 		} else {
-			this.renderer.material.color = new Color (1.0f, 1.0f, 1.0f);
+			renderer.material.color = new Color (1.0f, 1.0f, 1.0f);
 		}
 
-		if (this._hostile) {
-			this.renderer.material.color = new Color(0.0f, 0.0f, 0.0f);
+		if (_hostile) {
+			renderer.material.color = new Color(0.0f, 0.0f, 0.0f);
 		}
 	}
 
 	// Use this for initialization
 	void Start () {
 		AllNPCs.Add (this);
-		state = new IdleState (this);
+		_state = new IdleState (this);
 	}
 	#endregion
 }
