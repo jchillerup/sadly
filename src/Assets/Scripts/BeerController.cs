@@ -13,7 +13,7 @@ public class BeerController : Interactable {
 			Debug.Log ("drank beer");
 			this.drank = true;
 		}
-		Vector3 direction = p.gameObject.transform.forward + new Vector3 (400f, 600f, 400f);
+		Vector3 direction = p.gameObject.transform.forward + new Vector3 (60f, 90f, 60f);
 
 		this.gameObject.rigidbody.AddForce (direction);
 	}
