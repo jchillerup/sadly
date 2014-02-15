@@ -11,8 +11,6 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 _drunkMoveSpeed = new Vector3();
 	Vector2 _time = new Vector2(), _timeAcceleration = new Vector2();
 
-	
-
 	void FixedUpdate () {
 		if (_controller == null)
 			_controller = gameObject.GetComponent<CharacterController> ();
@@ -48,5 +46,28 @@ public class PlayerController : MonoBehaviour {
 		
 		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
 		body.velocity = pushDir * PushPower;
+	}
+
+	void Update() {
+		// Space searches for InteractableObjects nearby and engages them if they are close enough.
+		if (Input.GetKeyUp(KeyCode.Space)) {
+			var interactables = GameObject.FindGameObjectsWithTag ("interactable");
+
+			foreach(var obj in interactables) {
+				Vector3 dist = obj.transform.position - this.transform.position;
+
+				if (dist.magnitude < 1.3) {
+
+					foreach (var component in obj.GetComponents<Interactable>()) {
+						if (component.GetType().GetMethod ("Interact") != null) {
+							object[] arguments = { this };
+							component.GetType().GetMethod ("Interact").Invoke(component, arguments);
+						} else {
+							Debug.LogError("Interactable class without Interact method!");
+						}
+					}
+				}
+			}
+		}
 	}
 }
