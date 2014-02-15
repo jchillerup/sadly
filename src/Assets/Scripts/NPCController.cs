@@ -205,7 +205,7 @@ public class NPCController : MonoBehaviour {
 		var targetDirection = transform.position - that.transform.position;
 		targetDirection.y = 0;
 		var angle = Vector3.Angle (transform.forward, targetDirection);
-		return Mathf.Abs (angle) < FOVSizeInDegrees / 2.0;
+        return Mathf.Abs(angle + FOVSizeInDegrees / 2) < FOVSizeInDegrees;
 	}
 
 	void IncreaseHappiness(float howMuch) {
