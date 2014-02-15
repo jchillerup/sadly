@@ -1,0 +1,76 @@
+fileFormatVersion: 2
+guid: 2213e715eba634b4fb75da71fe6e901b
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: fatLady_GEO
+    100002: fatLady_GRP
+    100004: hip_JNT
+    100006: L_shoulder_JNT
+    100008: neck_JNT
+    100010: R_shoulder_JNT
+    100012: //RootNode
+    400000: fatLady_GEO
+    400002: fatLady_GRP
+    400004: hip_JNT
+    400006: L_shoulder_JNT
+    400008: neck_JNT
+    400010: R_shoulder_JNT
+    400012: //RootNode
+    4300000: fatLady_GEO
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: fatLady_GEO
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
