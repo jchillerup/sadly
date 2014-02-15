@@ -4,8 +4,12 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 	public float Speed;
 	public Vector3 Gravity = new Vector3(0.0f, -0.98f, 0.0f);
+	public float Beverages = 0.0f;
+	public float DrunkDamping = 0.9f;
 
 	private CharacterController _controller;
+	private Vector3 _drunkMoveSpeed = new Vector3();
+	Vector2 _time = new Vector2(), _timeAcceleration = new Vector2();
 
 	void FixedUpdate () {
 		if (_controller == null)
@@ -14,7 +18,13 @@ public class PlayerController : MonoBehaviour {
 		var moveVertical = Input.GetAxis ("Horizontal");
 		var moveHorizontal = Input.GetAxis ("Vertical");
 
-		var movement = new Vector3 (-moveHorizontal, 0, moveVertical);
+		_timeAcceleration += new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
+		_timeAcceleration = new Vector2(Mathf.Clamp(_timeAcceleration.x, -5, 5),
+		                                Mathf.Clamp(_timeAcceleration.y, -5, 5));
+
+		_time += _timeAcceleration * Time.deltaTime * 0.2f;
+
+		var movement = new Vector3 (-moveHorizontal, 0, moveVertical) + new Vector3(Mathf.Sin(_time.x * 3), 0, Mathf.Cos(_time.y * 3)) * (Beverages*0.04f);
 		_controller.Move(movement * Speed * Time.deltaTime);
 
 		if (!_controller.isGrounded)
