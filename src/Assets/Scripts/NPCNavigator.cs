@@ -12,15 +12,39 @@ public class NPCNavigator : MonoBehaviour {
 	void Start () {
 		_agent = GetComponent<NavMeshAgent>();
 		_controller = GetComponent<CharacterController>();
+		walkToRandomTarget();
 	}
 	
+	void walkToRandomTarget()
+	{
+		float radius = 10.0f;
+		Vector3 randomDirection = Random.insideUnitSphere * radius;
+		NavMeshHit hit = new NavMeshHit();
+
+		while( !hit.hit )
+		{
+			randomDirection = Random.insideUnitSphere * radius;
+			randomDirection += transform.position;
+			
+			NavMesh.SamplePosition(randomDirection, out hit, radius, 1);
+		}
+
+		_agent.destination = hit.position;
+	}
+
 	// Update is called once per frame
 	void Update () {
-		if( Target != null && _agent != null )
+		if( Target != null ) // Walk to target
 		{
 			_agent.destination = Target.position;
-			//_controller.Move(_agent.desiredVelocity);
 		}
+		else
+		{
+			
+		}
+
+		if (!_controller.isGrounded)
+			_controller.Move (Physics.gravity * Time.deltaTime);
 	}
 
 	bool hasReachedTarget()
