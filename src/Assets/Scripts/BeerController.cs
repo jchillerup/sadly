@@ -11,7 +11,7 @@ public class BeerController : Interactable {
 	public void Interact(PlayerController p) {
 		if (!drank) {
 			p.Beverages += 1.0f;
-			p.Points += PointsToDrink;
+			p.AwardPoints(PointsToDrink);
 			this.drank = true;
 		}
 		Vector3 direction = p.gameObject.transform.forward + new Vector3 (60f, 90f, 60f);

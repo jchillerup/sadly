@@ -6,7 +6,7 @@ public class GUIController : MonoBehaviour {
 	public PlayerController player;
 
 	void OnGUI() {
-		GUI.Label(new Rect(20, 20, 200, 40), "Points: "+player.Points);
+		GUI.Label(new Rect(20, 20, 200, 40), "Points: "+player.GetPoints ());
 	}
 
 	// Use this for initialization
