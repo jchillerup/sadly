@@ -1,6 +1,6 @@
 //Maya ASCII 2014 scene
-//Name: SAD_art_loc_mdl_weddingRoom_001_TC.ma
-//Last modified: Sat, Feb 15, 2014 11:48:58 AM
+//Name: SAD_art_loc_mdl_weddingRoom_002_TC.ma
+//Last modified: Sat, Feb 15, 2014 12:46:29 PM
 //Codeset: 1252
 requires maya "2014";
 requires -nodeType "mentalrayFramebuffer" -nodeType "mentalrayOutputPass" -nodeType "mentalrayRenderPass"
@@ -89,15 +89,15 @@ fileInfo "cutIdentifier" "201303010241-864206";
 fileInfo "osv" "Microsoft Windows 7 Ultimate Edition, 64-bit Windows 7 Service Pack 1 (Build 7601)\n";
 createNode transform -s -n "persp";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -21.868696607428049 38.286361399777206 20.841572678908236 ;
-	setAttr ".r" -type "double3" -54.938352729694834 -426.9999999998783 359.99999999998352 ;
+	setAttr ".t" -type "double3" -4.0746789122061697 25.549051742961694 38.666619393562719 ;
+	setAttr ".r" -type "double3" -36.938352730056664 -732.59999999953129 359.99999999994145 ;
 	setAttr ".rp" -type "double3" -3.5527136788005009e-015 1.4210854715202004e-014 -5.3290705182007514e-015 ;
 	setAttr ".rpt" -type "double3" -4.236438595415109e-018 -2.8908050147850704e-015 
 		2.5192704509174661e-014 ;
 createNode camera -s -n "perspShape" -p "persp";
 	setAttr -k off ".v" no;
 	setAttr ".fl" 34.999999999999986;
-	setAttr ".coi" 46.210066206922875;
+	setAttr ".coi" 46.210066206922392;
 	setAttr ".imn" -type "string" "persp";
 	setAttr ".den" -type "string" "persp_depth";
 	setAttr ".man" -type "string" "persp_mask";
@@ -520,6 +520,97 @@ createNode deleteComponent -n "deleteComponent4";
 	setAttr ".dc" -type "componentList" 1 "f[15]";
 createNode deleteComponent -n "deleteComponent5";
 	setAttr ".dc" -type "componentList" 1 "f[32]";
+createNode polySplitRing -n "polySplitRing5";
+	setAttr ".uopa" yes;
+	setAttr ".ics" -type "componentList" 3 "e[0:3]" "e[38]" "e[41]";
+	setAttr ".ix" -type "matrix" 14.582123288229107 0 0 0 0 3.8478324428928485 0 0 0 0 12.551541195586038 0
+		 0 1.9239162214464245 0 1;
+	setAttr ".wt" 0.59767025709152222;
+	setAttr ".dr" no;
+	setAttr ".re" 38;
+	setAttr ".sma" 29.999999999999996;
+	setAttr ".p[0]"  0 0 1;
+	setAttr ".fq" yes;
+createNode polySplitRing -n "polySplitRing6";
+	setAttr ".uopa" yes;
+	setAttr ".ics" -type "componentList" 3 "e[0:3]" "e[41]" "e[85]";
+	setAttr ".ix" -type "matrix" 14.582123288229107 0 0 0 0 3.8478324428928485 0 0 0 0 12.551541195586038 0
+		 0 1.9239162214464245 0 1;
+	setAttr ".wt" 0.44078615307807922;
+	setAttr ".re" 85;
+	setAttr ".sma" 29.999999999999996;
+	setAttr ".p[0]"  0 0 1;
+	setAttr ".fq" yes;
+createNode polyExtrudeFace -n "polyExtrudeFace4";
+	setAttr ".ics" -type "componentList" 1 "f[37]";
+	setAttr ".ix" -type "matrix" 14.582123288229107 0 0 0 0 3.8478324428928485 0 0 0 0 12.551541195586038 0
+		 0 1.9239162214464245 0 1;
+	setAttr ".ws" yes;
+	setAttr ".pvt" -type "float3" -2.3024976 1.3517653 6.2757692 ;
+	setAttr ".rs" 58216;
+	setAttr ".lt" -type "double3" 2.8377032439373063e-016 1.1245736321798288e-017 -0.076715305276909146 ;
+	setAttr ".c[0]"  0 1 1;
+	setAttr ".cbn" -type "double3" -3.1489877557499741 2.2204460492503131e-016 6.2757691015327106 ;
+	setAttr ".cbx" -type "double3" -1.456007611786847 2.7035306594338286 6.2757694755977873 ;
+createNode polyTweak -n "polyTweak4";
+	setAttr ".uopa" yes;
+	setAttr -s 13 ".tk";
+	setAttr ".tk[44]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[45]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[46]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[47]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[48]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[49]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[50]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[51]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[52]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[53]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[54]" -type "float3" 0.13675888 0 0 ;
+	setAttr ".tk[55]" -type "float3" 0.13675888 0 0 ;
+createNode polyExtrudeFace -n "polyExtrudeFace5";
+	setAttr ".ics" -type "componentList" 1 "f[37]";
+	setAttr ".ix" -type "matrix" 14.582123288229107 0 0 0 0 3.8478324428928485 0 0 0 0 12.551541195586038 0
+		 0 1.9239162214464245 0 1;
+	setAttr ".ws" yes;
+	setAttr ".pvt" -type "float3" -2.3024976 1.3517653 6.3524847 ;
+	setAttr ".rs" 48582;
+	setAttr ".lt" -type "double3" 0 2.1313085523882608e-017 -5.6134299356974093 ;
+	setAttr ".c[0]"  0 1 1;
+	setAttr ".cbn" -type "double3" -3.1489877557499741 2.2204460492503131e-016 6.3524846119498726 ;
+	setAttr ".cbx" -type "double3" -1.456007611786847 2.7035306594338286 6.3524846119498726 ;
+createNode deleteComponent -n "deleteComponent6";
+	setAttr ".dc" -type "componentList" 1 "f[49]";
+createNode polyExtrudeFace -n "polyExtrudeFace6";
+	setAttr ".ics" -type "componentList" 1 "f[48:49]";
+	setAttr ".ix" -type "matrix" 14.582123288229107 0 0 0 0 3.8478324428928485 0 0 0 0 12.551541195586038 0
+		 0 1.9239162214464245 0 1;
+	setAttr ".ws" yes;
+	setAttr ".pvt" -type "float3" -2.3024976 1.3517653 9.2056065 ;
+	setAttr ".rs" 44298;
+	setAttr ".c[0]"  0 1 1;
+	setAttr ".cbn" -type "double3" -3.1489877557499741 2.2204460492503131e-016 6.4452983870282647 ;
+	setAttr ".cbx" -type "double3" -1.456007611786847 2.7035306594338286 11.965913888325382 ;
+createNode polyTweak -n "polyTweak5";
+	setAttr ".uopa" yes;
+	setAttr -s 4 ".tk[56:59]" -type "float3"  0 0 0.0073946416 0 0 0.0073946416
+		 0 0 0.0073946416 0 0 0.0073946416;
+createNode polyTweak -n "polyTweak6";
+	setAttr ".uopa" yes;
+	setAttr -s 13 ".tk";
+	setAttr ".tk[32]" -type "float3" -0.031437606 0 0 ;
+	setAttr ".tk[33]" -type "float3" -0.031437606 0 0 ;
+	setAttr ".tk[34]" -type "float3" -0.031437606 0 0 ;
+	setAttr ".tk[35]" -type "float3" -0.031437606 0 0 ;
+	setAttr ".tk[64]" -type "float3" -0.28405148 0 0 ;
+	setAttr ".tk[65]" -type "float3" -0.28405154 0 0 ;
+	setAttr ".tk[66]" -type "float3" -0.28405154 0 0 ;
+	setAttr ".tk[67]" -type "float3" -0.28405148 0 0 ;
+	setAttr ".tk[68]" -type "float3" 0.1266802 0 0 ;
+	setAttr ".tk[69]" -type "float3" 0.1266802 0 0 ;
+	setAttr ".tk[70]" -type "float3" 0.1266802 0 0 ;
+	setAttr ".tk[71]" -type "float3" 0.1266802 0 0 ;
+createNode deleteComponent -n "deleteComponent7";
+	setAttr ".dc" -type "componentList" 2 "f[52]" "f[58]";
 select -ne :time1;
 	setAttr ".o" 1;
 	setAttr ".unw" 1;
@@ -547,7 +638,9 @@ select -ne :hardwareRenderingGlobals;
 select -ne :defaultHardwareRenderGlobals;
 	setAttr ".fn" -type "string" "im";
 	setAttr ".res" -type "string" "ntsc_4d 646 485 1.333";
-connectAttr "deleteComponent5.og" "pCubeShape1.i";
+select -ne :ikSystem;
+	setAttr -s 4 ".sol";
+connectAttr "deleteComponent7.og" "pCubeShape1.i";
 relationship "link" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
 relationship "link" ":lightLinker1" ":initialParticleSE.message" ":defaultLightSet.message";
 relationship "shadowLink" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
@@ -582,6 +675,21 @@ connectAttr "deleteComponent3.og" "polyExtrudeFace3.ip";
 connectAttr "pCubeShape1.wm" "polyExtrudeFace3.mp";
 connectAttr "polyExtrudeFace3.out" "deleteComponent4.ig";
 connectAttr "deleteComponent4.og" "deleteComponent5.ig";
+connectAttr "deleteComponent5.og" "polySplitRing5.ip";
+connectAttr "pCubeShape1.wm" "polySplitRing5.mp";
+connectAttr "polySplitRing5.out" "polySplitRing6.ip";
+connectAttr "pCubeShape1.wm" "polySplitRing6.mp";
+connectAttr "polyTweak4.out" "polyExtrudeFace4.ip";
+connectAttr "pCubeShape1.wm" "polyExtrudeFace4.mp";
+connectAttr "polySplitRing6.out" "polyTweak4.ip";
+connectAttr "polyExtrudeFace4.out" "polyExtrudeFace5.ip";
+connectAttr "pCubeShape1.wm" "polyExtrudeFace5.mp";
+connectAttr "polyExtrudeFace5.out" "deleteComponent6.ig";
+connectAttr "polyTweak5.out" "polyExtrudeFace6.ip";
+connectAttr "pCubeShape1.wm" "polyExtrudeFace6.mp";
+connectAttr "deleteComponent6.og" "polyTweak5.ip";
+connectAttr "polyExtrudeFace6.out" "polyTweak6.ip";
+connectAttr "polyTweak6.out" "deleteComponent7.ig";
 connectAttr "pCubeShape1.iog" ":initialShadingGroup.dsm" -na;
 connectAttr "defaultRenderLayer.msg" ":defaultRenderingList1.r" -na;
-// End of SAD_art_loc_mdl_weddingRoom_001_TC.ma
+// End of SAD_art_loc_mdl_weddingRoom_002_TC.ma
