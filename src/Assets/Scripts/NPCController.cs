@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum NPCState {
 	IDLE,
@@ -10,6 +11,7 @@ public class NPCController : MonoBehaviour {
 	public GameObject Player;
 	public NPCState State = NPCState.IDLE;
 	public int HappinessIncrement = 1;
+	public static IList<NPCController> AllNPCs = new List<NPCController>();
 
 	private static float _privateSphereThreshold = 1.5f;
 	private int _happiness = 100;
@@ -52,9 +54,6 @@ public class NPCController : MonoBehaviour {
 		decreaseHappiness (1);
 	}
 
-	void EnterRoom() {
-	}
-
 	#region UNITY PRIMITIVES
 	void FixedUpdate() {
 		if (GetDistanceToPlayer () < _privateSphereThreshold) {
@@ -70,7 +69,7 @@ public class NPCController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		AllNPCs.Add (this);
 	}
 	
 	// Update is called once per frame
