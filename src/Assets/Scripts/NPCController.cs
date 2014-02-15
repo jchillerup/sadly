@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public enum NPCState {
 	IDLE,
@@ -12,10 +13,12 @@ public class NPCController : MonoBehaviour {
 	public NPCState State = NPCState.IDLE;
 	public int HappinessIncrement = 1;
 	public static IList<NPCController> AllNPCs = new List<NPCController>();
+	public int EnterRoomPenalty = 5;
 
 	private static float _privateSphereThreshold = 1.5f;
 	private int _happiness = 100;
 	private bool _hostile = false;
+	private bool _hasSeenPlayer = false;
 
 	float GetDistanceToPlayer() {
 		Vector3 distance = Player.transform.position - this.transform.position;
@@ -65,29 +68,36 @@ public class NPCController : MonoBehaviour {
 		if (this._happiness < 20) {
 			this._hostile = true;
 		}
-	}
 
-	// Use this for initialization
-	void Start () {
-		AllNPCs.Add (this);
-	}
-	
-	// Update is called once per frame
-	void Update () {
+		if (!_hasSeenPlayer && IsVisible (Player))
+		{
+			EnterRoom(Player);
+		}
+
 		if (this._happiness < 80) {
 			this.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 		} else {
 			this.renderer.material.color = new Color (1.0f, 1.0f, 1.0f);
 		}
-
+		
 		if (this._hostile) {
 			this.renderer.material.color = new Color(0.0f, 0.0f, 0.0f);
-
+			
 			// If the NPC is hostile and the player is close, they will try to push her away
 			if (GetDistanceToPlayer() < _privateSphereThreshold) {
 				Player.rigidbody.AddForce(1.0f, 0.0f, 0f);
 			}
 		}
+	}
+
+	void EnterRoom(GameObject player)
+	{
+		decreaseHappiness(EnterRoomPenalty);
+	}
+
+	// Use this for initialization
+	void Start () {
+		AllNPCs.Add (this);
 	}
 	#endregion
 }

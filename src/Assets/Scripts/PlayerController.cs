@@ -19,7 +19,5 @@ public class PlayerController : MonoBehaviour {
 
 		if (!_controller.isGrounded)
 			_controller.Move (this.Gravity* Time.deltaTime);
-
-
 	}
 }
