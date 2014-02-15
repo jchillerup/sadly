@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour {
 		var moveVertical = Input.GetAxis ("Horizontal");
 		var moveHorizontal = Input.GetAxis ("Vertical");
 
-		var movement = new Vector3 (-moveHorizontal, 0, -moveVertical);
+		var movement = new Vector3 (-moveHorizontal, 0, moveVertical);
 	    gameObject.rigidbody.AddForce (movement * Speed * Time.deltaTime);
 	}
 }
