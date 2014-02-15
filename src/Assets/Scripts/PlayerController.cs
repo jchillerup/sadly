@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour {
 			foreach(var obj in interactables) {
 				Vector3 dist = obj.transform.position - this.transform.position;
 
-				if (dist.magnitude < 1.3) {
+				if (dist.magnitude < 1.5) {
 
 					foreach (var component in obj.GetComponents<Interactable>()) {
 						if (component.GetType().GetMethod ("Interact") != null) {
