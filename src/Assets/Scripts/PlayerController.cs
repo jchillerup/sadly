@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 _moveSpeed = new Vector3();
 	private Vector3 _pushSpeed = new Vector3();
 
+	public int Points = 0;
+
 	Vector2 _time = new Vector2(), _timeAcceleration = new Vector2();
 
 	void FixedUpdate () {
