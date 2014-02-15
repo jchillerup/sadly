@@ -1,54 +1,53 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NPCNavigator : MonoBehaviour {
+public class NPCNavigator : MonoBehaviour
+{
+    public Transform Target;
 
-	public Transform Target;
-	
-	private NavMeshAgent _agent;
-	private CharacterController _controller;
+    private NavMeshAgent _agent;
+    private CharacterController _controller;
 
-	// Use this for initialization
-	void Start () {
-		_agent = GetComponent<NavMeshAgent>();
-		_controller = GetComponent<CharacterController>();
-		walkToRandomTarget();
-	}
-	
-	void walkToRandomTarget()
-	{
-		float radius = 10.0f;
-		Vector3 randomDirection = Random.insideUnitSphere * radius;
-		NavMeshHit hit = new NavMeshHit();
+    // Use this for initialization
+    void Start()
+    {
+        _agent = GetComponent<NavMeshAgent>();
+        _controller = GetComponent<CharacterController>();
+    }
 
-		while( !hit.hit )
-		{
-			randomDirection = Random.insideUnitSphere * radius;
-			randomDirection += transform.position;
-			
-			NavMesh.SamplePosition(randomDirection, out hit, radius, 1);
-		}
+    public void WalkToRandomTarget()
+    {
+        // TODO(jrgfogh): Make this configurable.
+        var radius = 10.0f;
+        var hit = new NavMeshHit();
 
-		_agent.destination = hit.position;
-	}
+        while (!hit.hit)
+        {
+            var randomDirection = Random.insideUnitSphere * radius;
+            randomDirection += transform.position;
 
-	// Update is called once per frame
-	void Update () {
-		if( Target != null ) // Walk to target
-		{
-			_agent.destination = Target.position;
-		}
-		else
-		{
-			
-		}
+            NavMesh.SamplePosition(randomDirection, out hit, radius, 1);
+        }
 
-		if (!_controller.isGrounded)
-			_controller.Move (Physics.gravity * Time.deltaTime);
-	}
+        _agent.destination = hit.position;
+    }
 
-	bool hasReachedTarget()
-	{
-		return _agent.remainingDistance <= _agent.stoppingDistance;
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        if (Target != null) // Walk to target
+        {
+            _agent.destination = Target.position;
+        }
+
+        if (!_controller.isGrounded)
+        {
+            _controller.Move(Physics.gravity * Time.deltaTime);
+        }
+    }
+
+    public bool HasReachedTarget()
+    {
+        return _agent.remainingDistance <= _agent.stoppingDistance;
+    }
 }

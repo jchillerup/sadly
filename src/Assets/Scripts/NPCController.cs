@@ -12,6 +12,7 @@ public class NPCController : MonoBehaviour
     public float HostileThreshold = 20;
     public float FOVSizeInDegrees = 90;
     public float ChatAvoidance = 10000;
+    public NPCNavigator Navigator;
 
     private static float _privateSphereThreshold = 1.5f;
     private bool _hostile = true;
@@ -75,7 +76,7 @@ public class NPCController : MonoBehaviour
         void InitiateTalk(NPCController conversationPartner)
         {
             conversationPartner._state = new WaitingState(conversationPartner);
-            Npc._state = new ChatWalkingState(Npc);
+            Npc._state = new ChatWalkingState(Npc, conversationPartner);
         }
 
         void TryToInitiateTalk()
@@ -103,12 +104,11 @@ public class NPCController : MonoBehaviour
     }
 
     // TODO(jrgfogh): This isn't used yet.
-    class ChatWalkingState : NpcState
+    class IdleWalkingState : NpcState
     {
-        public ChatWalkingState(NPCController npcController)
+        public IdleWalkingState(NPCController npcController)
             : base(npcController)
         {
-            Npc.renderer.material.color = new Color(0.0f, 1.0f, 0.0f);
         }
 
         public override void FixedUpdate()
@@ -121,18 +121,20 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    class IdleWalkingState : NpcState
+    class ChatWalkingState: NpcState
     {
         private readonly NPCController _conversationPartner;
 
-        public IdleWalkingState(NPCController npcController, NPCController conversationPartner)
+        public ChatWalkingState(NPCController npcController, NPCController conversationPartner)
             : base(npcController)
         {
+            Npc.renderer.material.color = new Color(0.0f, 1.0f, 0.0f);
             _conversationPartner = conversationPartner;
         }
 
         private void InitiateTalk()
         {
+            // TODO(jrgfogh): Make the conversation length configurable.
             var conversationLength = Random.Range(10000, 15000);
             var conversationEndTime = Time.time + conversationLength;
             Npc._state = new ChattingState(Npc, _conversationPartner, conversationEndTime);
@@ -141,8 +143,7 @@ public class NPCController : MonoBehaviour
 
         public override void FixedUpdate()
         {
-            // TODO(jrgfogh): Call Kim's script here.
-            if (false)
+            if (Npc.Navigator.HasReachedTarget())
             {
                 InitiateTalk();
             }
@@ -195,8 +196,8 @@ public class NPCController : MonoBehaviour
 
         private void EndConversation()
         {
-            // TODO(jrgfogh): Move somewhere else?
             Npc._state = new IdleState(Npc);
+            Npc.Navigator.WalkToRandomTarget();
         }
 
         public override void PrivacyInvaded()
@@ -289,6 +290,7 @@ public class NPCController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Navigator = GetComponent<NPCNavigator>();
         AllNPCs.Add(this);
         _state = new IdleState(this);
     }
