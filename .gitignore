@@ -13,3 +13,4 @@ src/src.userprefs
 *~
 *.userprefs
 /src/src-csharp.suo
+*.meta
