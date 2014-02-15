@@ -7,53 +7,64 @@ public enum NPCState {
 };
 
 public class NPCController : MonoBehaviour {
-	private static float PrivateSphereThreshold = 1.5f;
+	public GameObject Player;
+	public NPCState State = NPCState.IDLE;
+	public int HappinessIncrement = 1;
 
-	public GameObject player;
-	public NPCState state = NPCState.IDLE;
-	private int happiness = 100;
-	private bool hostile = false;
+	private static float _privateSphereThreshold = 1.5f;
+	private int _happiness = 100;
+	private bool _hostile = false;
 
 	float GetDistanceToPlayer() {
-		Vector3 distance = player.transform.position - this.transform.position;
-
+		Vector3 distance = Player.transform.position - this.transform.position;
 		return distance.magnitude;
 	}
 
 	void increaseHappiness(int howMuch) {
-		if (!this.hostile) {
-			this.happiness += howMuch;
+		if (!this._hostile) {
+			this._happiness += howMuch;
 		}
-		if (this.happiness > 100) {
-			this.happiness = 100;
+		if (this._happiness > 100) {
+			this._happiness = 100;
 		}
 	}
+
+	bool IsVisible(GameObject that) {
+		var targetDirection = transform.position - that.transform.position;
+		targetDirection.y = 0;
+		var angle = Vector3.Angle (transform.forward, targetDirection);
+		return Mathf.Abs (angle) < 45;
+	}
+
 	void increaseHappiness() {
-		increaseHappiness (1);
+		increaseHappiness (HappinessIncrement);
 	}
 
 	void decreaseHappiness(int howMuch) {
-		this.happiness -= howMuch;
+		this._happiness -= howMuch;
 
-		if (this.happiness < 0) {
-			this.happiness = 0;
+		if (this._happiness < 0) {
+			this._happiness = 0;
 		}
 	}
+
 	void decreaseHappiness() {
 		decreaseHappiness (1);
 	}
 
+	void EnterRoom() {
+	}
+
 	#region UNITY PRIMITIVES
 	void FixedUpdate() {
-		if (GetDistanceToPlayer () < PrivateSphereThreshold) {
+		if (GetDistanceToPlayer () < _privateSphereThreshold) {
 			decreaseHappiness();
 		} else {
 			increaseHappiness();
 		}
-
 		
-		if (this.happiness < 20) {
-			this.hostile = true;
+		if (this._happiness < 20) {
+			this._hostile = true;
 		}
 	}
 
@@ -64,18 +75,18 @@ public class NPCController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (this.happiness < 80) {
+		if (this._happiness < 80) {
 			this.renderer.material.color = new Color (1.0f, 0.0f, 0.0f);
 		} else {
 			this.renderer.material.color = new Color (1.0f, 1.0f, 1.0f);
 		}
 
-		if (this.hostile) {
+		if (this._hostile) {
 			this.renderer.material.color = new Color(0.0f, 0.0f, 0.0f);
 
 			// If the NPC is hostile and the player is close, they will try to push her away
-			if (GetDistanceToPlayer() < PrivateSphereThreshold) {
-				this.player.rigidbody.AddForce(1.0f, 0.0f, 0f);
+			if (GetDistanceToPlayer() < _privateSphereThreshold) {
+				Player.rigidbody.AddForce(1.0f, 0.0f, 0f);
 			}
 		}
 	}
