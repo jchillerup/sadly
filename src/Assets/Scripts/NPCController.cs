@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Reflection;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Random = UnityEngine.Random;
 
 public class NPCController : MonoBehaviour
 {
@@ -76,7 +79,9 @@ public class NPCController : MonoBehaviour
         void InitiateTalk(NPCController conversationPartner)
         {
             conversationPartner._state = new WaitingState(conversationPartner);
+            conversationPartner.Navigator.StopMoving();
             Npc._state = new ChatWalkingState(Npc, conversationPartner);
+            Npc.Navigator.SetDestination(conversationPartner.transform.position);
         }
 
         void TryToInitiateTalk()
@@ -181,7 +186,7 @@ public class NPCController : MonoBehaviour
         public ChattingState(NPCController npcController, NPCController conversationPartner, float conversationEndTime)
             : base(npcController)
         {
-            Npc.renderer.material.color = new Color(1.0f, 1.0f, 1.0f);
+            Npc.renderer.material.color = new Color(.5f, .5f, .5f);
             _conversationPartner = conversationPartner;
             _conversationEndTime = conversationEndTime;
         }
@@ -267,6 +272,7 @@ public class NPCController : MonoBehaviour
             if (_hostile)
             {
                 // If the NPC is hostile and the player is close, they will try to push her away
+                // TODO(jrgfogh): Push the player away.
                 Player.rigidbody.AddForce(1.0f, 0.0f, 0f);
             }
         }
