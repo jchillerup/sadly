@@ -2,13 +2,16 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
-	public float Speed;
+	public float Speed, MoveDamping = 0.9f;
 	public Vector3 Gravity = new Vector3(0.0f, -0.98f, 0.0f);
 	public float Beverages = 0.0f;
 	public float PushPower = 1.0f;
 
 	private CharacterController _controller;
 	private Vector3 _drunkMoveSpeed = new Vector3();
+	private Vector3 _moveSpeed = new Vector3();
+	private Vector3 _pushSpeed = new Vector3();
+
 	Vector2 _time = new Vector2(), _timeAcceleration = new Vector2();
 
 	void FixedUpdate () {
@@ -24,9 +27,19 @@ public class PlayerController : MonoBehaviour {
 
 		_time += _timeAcceleration * Time.deltaTime * 0.2f;
 
-		var movement = new Vector3 (-moveHorizontal, 0, moveVertical) + new Vector3(Mathf.Sin(_time.x * 3), 0, Mathf.Cos(_time.y * 3)) * (Beverages*0.04f);
+		_moveSpeed += new Vector3 (-moveHorizontal, 0, moveVertical);
+		_moveSpeed = new Vector3(Mathf.Clamp(_moveSpeed.x, -1.0f, 1.0f),
+		                 0,
+		                 Mathf.Clamp(_moveSpeed.z, -1.0f, 1.0f));
+
+		_moveSpeed *= MoveDamping;
+		_pushSpeed *= 0.95f;
+
+		var movement = _moveSpeed + new Vector3(Mathf.Sin(_time.x * 3), 0, Mathf.Cos(_time.y * 3)) * (Beverages*0.04f);
 		_controller.Move(movement * Speed * Time.deltaTime);
-		transform.LookAt(transform.position + movement);
+
+		if( _moveSpeed.magnitude > 0.0001f )
+			transform.LookAt(transform.position + _moveSpeed * 10.0f);
 
 		if (!_controller.isGrounded)
 			_controller.Move (Physics.gravity * Time.deltaTime);
@@ -74,5 +87,6 @@ public class PlayerController : MonoBehaviour {
 
     public void PushPlayerAway(NPCController npc)
     {
+		_pushSpeed += transform.position - npc.transform.position;
     }
 }
