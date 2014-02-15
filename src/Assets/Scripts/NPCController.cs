@@ -69,7 +69,7 @@ public class NPCController : MonoBehaviour {
 			this._hostile = true;
 		}
 
-		if (!_hasSeenPlayer && IsVisible (Player))
+		if (!_hasSeenPlayer && IsInFOV (Player))
 		{
 			EnterRoom(Player);
 		}
@@ -92,7 +92,8 @@ public class NPCController : MonoBehaviour {
 
 	void EnterRoom(GameObject player)
 	{
-		decreaseHappiness(EnterRoomPenalty);
+		// TODO: this should only happen if the player is in FOV of current NPC.
+		DecreaseHappiness(EnterRoomPenalty);
 	}
 
 	// Use this for initialization
