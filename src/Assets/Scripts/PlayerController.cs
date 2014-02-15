@@ -5,11 +5,13 @@ public class PlayerController : MonoBehaviour {
 	public float Speed;
 	public Vector3 Gravity = new Vector3(0.0f, -0.98f, 0.0f);
 	public float Beverages = 0.0f;
-	public float DrunkDamping = 0.9f;
+	public float PushPower = 1.0f;
 
 	private CharacterController _controller;
 	private Vector3 _drunkMoveSpeed = new Vector3();
 	Vector2 _time = new Vector2(), _timeAcceleration = new Vector2();
+
+	
 
 	void FixedUpdate () {
 		if (_controller == null)
@@ -29,5 +31,22 @@ public class PlayerController : MonoBehaviour {
 
 		if (!_controller.isGrounded)
 			_controller.Move (this.Gravity* Time.deltaTime);
+	}
+
+	void OnControllerColliderHit(ControllerColliderHit hit) {
+		Rigidbody body = hit.collider.attachedRigidbody;
+		if (body == null || body.isKinematic)
+			return;
+
+		if( body.gameObject.GetComponent<CharacterController>() != null )
+		{
+			//hit.normal
+		}
+		
+		if (hit.moveDirection.y < -0.3F)
+			return;
+		
+		Vector3 pushDir = new Vector3(hit.moveDirection.x, 0, hit.moveDirection.z);
+		body.velocity = pushDir * PushPower;
 	}
 }
