@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum NPCState {
 	IDLE,
@@ -10,6 +11,7 @@ public class NPCController : MonoBehaviour {
 	public GameObject Player;
 	public NPCState State = NPCState.IDLE;
 	public int HappinessIncrement = 1;
+	public static IList<NPCController> AllNPCs = new List<NPCController>();
 
 	private static float _privateSphereThreshold = 1.5f;
 	private int _happiness = 100;
@@ -19,8 +21,15 @@ public class NPCController : MonoBehaviour {
 		Vector3 distance = Player.transform.position - this.transform.position;
 		return distance.magnitude;
 	}
+	
+	bool IsInFOV(GameObject that) {
+		var targetDirection = transform.position - that.transform.position;
+		targetDirection.y = 0;
+		var angle = Vector3.Angle (transform.forward, targetDirection);
+		return Mathf.Abs (angle) < 45;
+	}
 
-	void increaseHappiness(int howMuch) {
+	void IncreaseHappiness(int howMuch) {
 		if (!this._hostile) {
 			this._happiness += howMuch;
 		}
@@ -29,18 +38,11 @@ public class NPCController : MonoBehaviour {
 		}
 	}
 
-	bool IsVisible(GameObject that) {
-		var targetDirection = transform.position - that.transform.position;
-		targetDirection.y = 0;
-		var angle = Vector3.Angle (transform.forward, targetDirection);
-		return Mathf.Abs (angle) < 45;
+	void IncreaseHappiness() {
+		IncreaseHappiness (HappinessIncrement);
 	}
 
-	void increaseHappiness() {
-		increaseHappiness (HappinessIncrement);
-	}
-
-	void decreaseHappiness(int howMuch) {
+	void DecreaseHappiness(int howMuch) {
 		this._happiness -= howMuch;
 
 		if (this._happiness < 0) {
@@ -48,19 +50,16 @@ public class NPCController : MonoBehaviour {
 		}
 	}
 
-	void decreaseHappiness() {
-		decreaseHappiness (1);
-	}
-
-	void EnterRoom() {
+	void DecreaseHappiness() {
+		DecreaseHappiness (1);
 	}
 
 	#region UNITY PRIMITIVES
 	void FixedUpdate() {
 		if (GetDistanceToPlayer () < _privateSphereThreshold) {
-			decreaseHappiness();
+			DecreaseHappiness();
 		} else {
-			increaseHappiness();
+			IncreaseHappiness();
 		}
 		
 		if (this._happiness < 20) {
@@ -70,7 +69,7 @@ public class NPCController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		AllNPCs.Add (this);
 	}
 	
 	// Update is called once per frame
