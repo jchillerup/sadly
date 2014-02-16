@@ -26,12 +26,7 @@ public class NPCController : MonoBehaviour
     private float _happiness = 100;
     private bool _hasSeenPlayer = false;
     private NpcState _state;
-    private readonly PlayerController _playerController;
-
-    public NPCController()
-    {
-        _playerController = Player.GetComponent<PlayerController>();
-    }
+    private PlayerController _playerController;
 
     public bool CanTalk
     {
@@ -431,6 +426,7 @@ public class NPCController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        _playerController = Player.GetComponent<PlayerController>();
         Navigator = GetComponent<NPCNavigator>();
         AllNPCs.Add(this);
         _state = new IdleState(this);
