@@ -82,14 +82,15 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update() {
+
 		// Space searches for InteractableObjects nearby and engages them if they are close enough.
-		if (Input.GetKeyUp(KeyCode.Space)) {
+		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return)) {
 			var interactables = GameObject.FindGameObjectsWithTag ("interactable");
 
 			foreach(var obj in interactables) {
 				var dist = obj.transform.position - this.transform.position;
-
-				if (dist.magnitude < 1.5) {
+				Debug.Log(dist.magnitude);
+				if (dist.magnitude < 2.5) {
 
 					foreach (var component in obj.GetComponents<Interactable>()) {
 						if (component.GetType().GetMethod ("Interact") != null) {
