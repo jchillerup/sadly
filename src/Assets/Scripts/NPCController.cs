@@ -7,8 +7,8 @@ public class NPCController : MonoBehaviour
 {
     public GameObject Player;
 	public GameObject MeshObject;
-    public float HappinessDecrement = 5;
-    public float HappinessIncrement = 1;
+    public float HappinessDecrement = 20;
+    public float HappinessIncrement = 15;
     public static IList<NPCController> AllNPCs = new List<NPCController>();
     public float EnterRoomPenalty = 5;
     public float HostileThreshold = 20;
@@ -16,9 +16,9 @@ public class NPCController : MonoBehaviour
     public float ChatAvoidance = 10000;
     public float GlarePeriod = 5000;
     public NPCNavigator Navigator;
+    public float PrivateSphereThreshold = 1.7f;
 
-    private static float _privateSphereThreshold = 1.5f;
-    private bool _hostile = true;
+    private bool _hostile = false;
     private float _happiness = 100;
     private bool _hasSeenPlayer = false;
     private NpcState _state;
@@ -341,6 +341,9 @@ public class NPCController : MonoBehaviour
 
     void DecreaseHappiness()
     {
+        Debug.Log(_happiness);
+        Debug.Log(HappinessIncrement * Time.deltaTime);
+        Debug.Log(_happiness);
 		ChangeHappiness(- HappinessDecrement * Time.deltaTime);
     }
 
@@ -354,9 +357,9 @@ public class NPCController : MonoBehaviour
     void FixedUpdate()
     {
         _state.FixedUpdate();
-        if (GetDistanceToPlayer() < _privateSphereThreshold)
+        if (GetDistanceToPlayer() < PrivateSphereThreshold)
         {
-            _state.PrivacyInvaded();
+			_state.PrivacyInvaded();
             if (_hostile)
             {
                 // If the NPC is hostile and the player is close, they will try to push her away.
@@ -367,12 +370,12 @@ public class NPCController : MonoBehaviour
         {
             // TODO(jrgfogh): Move this to State?
             IncreaseHappiness();
-        }
+		}
 
-        if (_happiness < HostileThreshold)
-        {
-            _hostile = true;
-        }
+		if (_happiness < HostileThreshold)
+		{
+			_hostile = true;
+		}
 
         if (!_hasSeenPlayer && IsInFOV(Player))
         {
