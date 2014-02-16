@@ -133,13 +133,13 @@ public class NPCController : MonoBehaviour
 
         public override void FixedUpdate()
         {
-			if (IsStationary ()) {
+//			if (IsStationary ()) {
 				if (WantsToWalk ()) {
 					Npc.Navigator.WalkToRandomTarget ();
 				} else if (WantsToTalk ()) {
 					TryToInitiateTalk ();
 				}
-			}
+//			}
         }
 
         public override void PrivacyInvaded()
@@ -294,7 +294,6 @@ public class NPCController : MonoBehaviour
     void ChangeHappiness(float delta)
     {
         _happiness = Mathf.Clamp(_happiness + delta, 0, 100);
-		Debug.Log (_happiness);
     }
 
     void IncreaseHappiness()
