@@ -81,6 +81,7 @@ public class NPCController : MonoBehaviour
         public PushingState(NPCController npc)
             : base(npc)
         {
+			npc.makeAngry();
         }
 
         public override void FixedUpdate()
@@ -104,6 +105,8 @@ public class NPCController : MonoBehaviour
         public IdleState(NPCController npcController)
             : base(npcController, true)
         {
+			npcController.makePassive();
+
 			if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(1.0f, 0.0f, 0.0f);
         }
@@ -171,6 +174,8 @@ public class NPCController : MonoBehaviour
 		public IdleWalkingState(NPCController npcController)
 			: base(npcController, true)
 		{
+			npcController.makePassive();
+
 			if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(1.0f, 0.5f, 0.0f);
 
@@ -198,6 +203,8 @@ public class NPCController : MonoBehaviour
         public GlaringState(NPCController npcController)
             : base(npcController)
         {
+			npcController.makeAngry();
+
             _startTime = Time.time * 1000;
         }
 
@@ -227,7 +234,9 @@ public class NPCController : MonoBehaviour
 
         public ChatWalkingState(NPCController npcController, NPCController conversationPartner)
             : base(npcController)
-        {
+        {	
+			npcController.makePassive();
+
 			if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(0.0f, 1.0f, 0.0f);
             _conversationPartner = conversationPartner;
@@ -275,6 +284,8 @@ public class NPCController : MonoBehaviour
         public WaitingState(NPCController npcController, NPCController conversationPartner)
             : base(npcController)
         {
+			npcController.makePassive();
+
             _conversationPartner = conversationPartner;
             if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(0.0f, 0.0f, 1.0f);
@@ -310,6 +321,8 @@ public class NPCController : MonoBehaviour
         public ChattingState(NPCController npcController, NPCController conversationPartner, float conversationEndTime)
             : base(npcController)
         {
+			npcController.makeSurprised();
+
 			if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(.5f, .5f, .5f);
             _conversationPartner = conversationPartner;
