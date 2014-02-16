@@ -38,23 +38,23 @@ public class NPCController : MonoBehaviour
 
 	public void makeAngry()
 	{
-		AngryFace.renderer.isVisible = true;
-		PassiveFace.renderer.isVisible = false;
-		SurprisedFace.renderer.isVisible = false;
+		//AngryFace.renderer.isVisible = true;
+		//PassiveFace.renderer.isVisible = false;
+		//SurprisedFace.renderer.isVisible = false;
 	}
 
 	public void makePassive()
 	{
-		AngryFace.renderer.isVisible = false;
-		PassiveFace.renderer.isVisible = true;
-		SurprisedFace.renderer.isVisible = false;
+		//AngryFace.renderer.isVisible = false;
+		//PassiveFace.renderer.isVisible = true;
+		//SurprisedFace.renderer.isVisible = false;
 	}
 
 	public void makeSurprised()
 	{
-		AngryFace.renderer.isVisible = false;
-		PassiveFace.renderer.isVisible = false;
-		SurprisedFace.renderer.isVisible = true;
+		//AngryFace.renderer.isVisible = false;
+		//PassiveFace.renderer.isVisible = false;
+		//SurprisedFace.renderer.isVisible = true;
 	}
 
 
