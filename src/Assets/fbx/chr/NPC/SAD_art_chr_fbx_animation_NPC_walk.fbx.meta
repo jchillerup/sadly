@@ -1,15 +1,34 @@
 fileFormatVersion: 2
-guid: b209e667d2ce4294682eb99377746dde
+guid: c3f25aa3da0bf19478c5470c8d20ee2e
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Ham
-    4300002: polySurface3
+    100000: Face_female_angry
+    100002: Face_female_passive
+    100004: Face_female_surpriced
+    100006: female
+    100008: hip_JNT
+    100010: neck_JNT
+    100012: NPC_female
+    100014: //RootNode
+    400000: Face_female_angry
+    400002: Face_female_passive
+    400004: Face_female_surpriced
+    400006: female
+    400008: hip_JNT
+    400010: neck_JNT
+    400012: NPC_female
+    400014: //RootNode
+    4300000: NPC_female
+    4300002: Face_female_passive
+    4300004: Face_female_angry
+    4300006: Face_female_surpriced
+    7400000: Take 001
     9500000: //RootNode
+    13700000: Face_female_angry
+    13700002: Face_female_passive
+    13700004: Face_female_surpriced
+    13700006: NPC_female
   materials:
     importMaterials: 1
     materialName: 0
