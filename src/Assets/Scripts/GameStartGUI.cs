@@ -6,8 +6,8 @@ public class GameStartGUI : MonoBehaviour {
 	public Texture button;
 
 	void OnGUI() {
-		float logoScale = 0.85f;
-		float buttonScale = 0.85f;
+		float logoScale = 0.70f;
+		float buttonScale = 0.70f;
 
 
 
