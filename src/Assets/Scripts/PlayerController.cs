@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour {
 		if( (transform.position - _lastPosition).magnitude* 10 > 0.1f )
 		{
 			GetComponent<Animator>().SetBool("Walking", true);
-			GetComponent<Animator>().speed = (transform.position - _lastPosition).magnitude* 10;
+			GetComponent<Animator>().speed = (transform.position - _lastPosition).magnitude* 20;
 		}
 		else
 		{
