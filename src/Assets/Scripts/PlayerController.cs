@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerController : MonoBehaviour {
 	public float Speed, MoveDamping = 0.9f;
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour {
 		var moveVertical = Input.GetAxis ("Horizontal");
 		var moveHorizontal = Input.GetAxis ("Vertical");
 
-		_timeAcceleration += new Vector2(Random.Range(-1.0f, 1.0f), Random.Range(-1.0f, 1.0f));
+		_timeAcceleration += new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
 		_timeAcceleration = new Vector2(Mathf.Clamp(_timeAcceleration.x, -5, 5),
 		                                Mathf.Clamp(_timeAcceleration.y, -5, 5));
 
@@ -51,7 +52,7 @@ public class PlayerController : MonoBehaviour {
 		if( (transform.position - _lastPosition).magnitude* 10 > 0.1f )
 		{
 			GetComponent<Animator>().SetBool("Walking", true);
-			GetComponent<Animator>().speed = (transform.position - _lastPosition).magnitude* 20;
+			GetComponent<Animator>().speed = (transform.position - _lastPosition).magnitude* 10;
 		}
 		else
 		{
@@ -108,8 +109,31 @@ public class PlayerController : MonoBehaviour {
 		_pushSpeed += (transform.position - npc.transform.position) * 6 + new Vector3(0, 4, 0);
     }
 
-	public void AwardPoints(int numPoints, GameObject sender) {
-		// TODO: Fireworks!
+	PointGiver.Points ToEnum (int numPoints)
+	{
+		switch (numPoints)
+		{
+		case 10:
+			return PointGiver.Points.Ten;
+		case 25:
+			return PointGiver.Points.TwentyFive;
+		case 50:
+			return PointGiver.Points.Fifty;
+/*		case 100:
+			return PointGiver.Points.MulTwo;
+		case 50:
+			return PointGiver.Points.MulFive;
+		case 50:
+			return PointGiver.Points.MulTen; */
+		default:
+			throw new NotImplementedException();
+		}
+	}
+
+	public void AwardPoints(int numPoints, GameObject sender)
+	{
+	    var giver = new PointGiver(sender);
+		giver.ShowPoints(ToEnum(numPoints));
 		_points += numPoints;
 	}
 
