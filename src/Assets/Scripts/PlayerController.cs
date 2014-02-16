@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 _moveSpeed = new Vector3();
 	private Vector3 _pushSpeed = new Vector3();
 	private Vector3 _lastPosition = new Vector3();
+	public BillboardController billboard;
 
 	private int Points;
 
