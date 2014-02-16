@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ee21c4880606e804789d8bba2de9929b
+guid: e8024415d1e8cf140adb330a219f11ec
 ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
@@ -7,25 +7,31 @@ ModelImporter:
     100002: face_drunk
     100004: face_passive
     100006: fatLady_GEO
-    100008: //RootNode
+    100008: fatLady_GRP
+    100010: hip_JNT
+    100012: L_shoulder_JNT
+    100014: neck_JNT
+    100016: R_shoulder_JNT
+    100018: //RootNode
     400000: face_angry
     400002: face_drunk
     400004: face_passive
     400006: fatLady_GEO
-    400008: //RootNode
-    2300000: face_angry
-    2300002: face_drunk
-    2300004: face_passive
-    2300006: fatLady_GEO
-    3300000: face_angry
-    3300002: face_drunk
-    3300004: face_passive
-    3300006: fatLady_GEO
+    400008: fatLady_GRP
+    400010: hip_JNT
+    400012: L_shoulder_JNT
+    400014: neck_JNT
+    400016: R_shoulder_JNT
+    400018: //RootNode
     4300000: face_drunk
     4300002: face_angry
     4300004: face_passive
     4300006: fatLady_GEO
     9500000: //RootNode
+    13700000: face_angry
+    13700002: face_drunk
+    13700004: face_passive
+    13700006: fatLady_GEO
   materials:
     importMaterials: 1
     materialName: 0

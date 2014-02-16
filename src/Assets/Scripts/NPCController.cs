@@ -18,9 +18,9 @@ public class NPCController : MonoBehaviour
     public NPCNavigator Navigator;
     public float PrivateSphereThreshold = 1.7f;
     public float PointsPerUnhappiness = 500;
-	public GameObject angryFace;
-	public GameObject passiveFace;
-    public GameObject surprisedFace;
+	public GameObject AngryFace;
+	public GameObject PassiveFace;
+    public GameObject SurprisedFace;
 
     private bool _hostile = false;
     private float _happiness = 100;
@@ -35,6 +35,28 @@ public class NPCController : MonoBehaviour
             return _state.CanTalk;
         }
     }
+
+	public void makeAngry()
+	{
+		AngryFace.renderer.isVisible = true;
+		PassiveFace.renderer.isVisible = false;
+		SurprisedFace.renderer.isVisible = false;
+	}
+
+	public void makePassive()
+	{
+		AngryFace.renderer.isVisible = false;
+		PassiveFace.renderer.isVisible = true;
+		SurprisedFace.renderer.isVisible = false;
+	}
+
+	public void makeSurprised()
+	{
+		AngryFace.renderer.isVisible = false;
+		PassiveFace.renderer.isVisible = false;
+		SurprisedFace.renderer.isVisible = true;
+	}
+
 
     public abstract class NpcState
     {
@@ -62,6 +84,7 @@ public class NPCController : MonoBehaviour
         {
             var controller = player.GetComponent<PlayerController>();
             controller.PushPlayerAway(Npc);
+            Npc.Navigator.StopMoving();
             Npc._state = new PushingState(Npc);
         }
 
@@ -73,6 +96,7 @@ public class NPCController : MonoBehaviour
         protected virtual void ChangeNpcState(NpcState state)
         {
             Npc._state = state;
+            Npc.Navigator.StopMoving();
         }
     }
 
@@ -81,6 +105,7 @@ public class NPCController : MonoBehaviour
         public PushingState(NPCController npc)
             : base(npc)
         {
+			npc.makeAngry();
         }
 
         public override void FixedUpdate()
@@ -104,6 +129,8 @@ public class NPCController : MonoBehaviour
         public IdleState(NPCController npcController)
             : base(npcController, true)
         {
+			npcController.makePassive();
+
 			if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(1.0f, 0.0f, 0.0f);
         }
@@ -171,6 +198,8 @@ public class NPCController : MonoBehaviour
 		public IdleWalkingState(NPCController npcController)
 			: base(npcController, true)
 		{
+			npcController.makePassive();
+
 			if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(1.0f, 0.5f, 0.0f);
 
@@ -198,6 +227,8 @@ public class NPCController : MonoBehaviour
         public GlaringState(NPCController npcController)
             : base(npcController)
         {
+			npcController.makeAngry();
+
             _startTime = Time.time * 1000;
         }
 
@@ -228,6 +259,8 @@ public class NPCController : MonoBehaviour
         public ChatWalkingState(NPCController npcController, NPCController conversationPartner)
             : base(npcController)
         {
+			npcController.makePassive();
+
 			if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(0.0f, 1.0f, 0.0f);
             _conversationPartner = conversationPartner;
@@ -259,12 +292,14 @@ public class NPCController : MonoBehaviour
         {
             base.PushPlayerAway(player);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
 
         protected override void ChangeNpcState(NpcState state)
         {
             base.ChangeNpcState(state);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
     }
 
@@ -275,6 +310,8 @@ public class NPCController : MonoBehaviour
         public WaitingState(NPCController npcController, NPCController conversationPartner)
             : base(npcController)
         {
+			npcController.makePassive();
+
             _conversationPartner = conversationPartner;
             if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(0.0f, 0.0f, 1.0f);
@@ -293,12 +330,14 @@ public class NPCController : MonoBehaviour
         {
             base.PushPlayerAway(player);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
 
         protected override void ChangeNpcState(NpcState state)
         {
             base.ChangeNpcState(state);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
     }
 
@@ -310,6 +349,8 @@ public class NPCController : MonoBehaviour
         public ChattingState(NPCController npcController, NPCController conversationPartner, float conversationEndTime)
             : base(npcController)
         {
+			npcController.makeSurprised();
+
 			if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(.5f, .5f, .5f);
             _conversationPartner = conversationPartner;
@@ -339,6 +380,7 @@ public class NPCController : MonoBehaviour
         {
             base.PushPlayerAway(player);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
 
         protected override void ChangeNpcState(NpcState state)
