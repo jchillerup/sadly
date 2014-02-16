@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 public class NPCController : MonoBehaviour
 {
     public GameObject Player;
+	public GameObject MeshObject;
     public float HappinessDecrement = 5;
     public float HappinessIncrement = 1;
     public static IList<NPCController> AllNPCs = new List<NPCController>();
@@ -83,7 +84,8 @@ public class NPCController : MonoBehaviour
         public IdleState(NPCController npcController)
             : base(npcController, true)
         {
-            Npc.renderer.material.color = new Color(1.0f, 0.0f, 0.0f);
+			if( Npc.MeshObject != null )
+				Npc.MeshObject.renderer.material.color = new Color(1.0f, 0.0f, 0.0f);
         }
 
         bool WantsToTalk()
@@ -183,7 +185,8 @@ public class NPCController : MonoBehaviour
         public ChatWalkingState(NPCController npcController, NPCController conversationPartner)
             : base(npcController)
         {
-            Npc.renderer.material.color = new Color(0.0f, 1.0f, 0.0f);
+			if( Npc.MeshObject != null )
+				Npc.MeshObject.renderer.material.color = new Color(0.0f, 1.0f, 0.0f);
             _conversationPartner = conversationPartner;
         }
 
@@ -215,7 +218,8 @@ public class NPCController : MonoBehaviour
         public WaitingState(NPCController npcController)
             : base(npcController)
         {
-            Npc.renderer.material.color = new Color(0.0f, 0.0f, 1.0f);
+			if( Npc.MeshObject != null )
+				Npc.MeshObject.renderer.material.color = new Color(0.0f, 0.0f, 1.0f);
         }
 
         public override void FixedUpdate()
@@ -236,7 +240,8 @@ public class NPCController : MonoBehaviour
         public ChattingState(NPCController npcController, NPCController conversationPartner, float conversationEndTime)
             : base(npcController)
         {
-            Npc.renderer.material.color = new Color(.5f, .5f, .5f);
+			if( Npc.MeshObject != null )
+				Npc.MeshObject.renderer.material.color = new Color(.5f, .5f, .5f);
             _conversationPartner = conversationPartner;
             _conversationEndTime = conversationEndTime;
         }
