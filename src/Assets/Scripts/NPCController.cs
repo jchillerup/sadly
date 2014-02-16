@@ -34,6 +34,27 @@ public class NPCController : MonoBehaviour
         }
     }
 
+	public void makeAngry()
+	{
+		angryFace.renderer.enabled = true;
+		passiveFace.renderer.enabled = false;
+		surprisedFace.renderer.enabled = false;
+	}
+
+	public void makePassive()
+	{
+		angryFace.renderer.enabled = false;
+		passiveFace.renderer.enabled = true;
+		surprisedFace.renderer.enabled = false;
+	}
+
+	public void makeSurprised()
+	{
+		angryFace.renderer.enabled = false;
+		passiveFace.renderer.enabled = false;
+		surprisedFace.renderer.enabled = true;
+	}
+
     public abstract class NpcState
     {
         protected NPCController Npc;
