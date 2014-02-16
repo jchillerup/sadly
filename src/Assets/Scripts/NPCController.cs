@@ -110,7 +110,7 @@ public class NPCController : MonoBehaviour
 
         void InitiateTalk(NPCController conversationPartner)
         {
-            conversationPartner._state = new WaitingState(conversationPartner);
+            conversationPartner._state = new WaitingState(conversationPartner, Npc);
             conversationPartner.Navigator.StopMoving();
             Npc._state = new ChatWalkingState(Npc, conversationPartner);
             Npc.Navigator.SetDestination(conversationPartner.transform.position);
@@ -160,7 +160,7 @@ public class NPCController : MonoBehaviour
 
         public override void FixedUpdate()
         {
-            if (Time.time > _startTime + Npc.GlarePeriod)
+            if (Time.time * 1000 > _startTime + Npc.GlarePeriod)
             {
                 Npc._state = new IdleState(Npc);
             }
@@ -211,14 +211,23 @@ public class NPCController : MonoBehaviour
         {
             Npc.DecreaseHappiness();
         }
+
+        public override void PushPlayerAway(GameObject player)
+        {
+            base.PushPlayerAway(player);
+            _conversationPartner._state = new IdleState(_conversationPartner);
+        }
     }
 
     class WaitingState : NpcState
     {
-        public WaitingState(NPCController npcController)
+        private readonly NPCController _conversationPartner;
+
+        public WaitingState(NPCController npcController, NPCController conversationPartner)
             : base(npcController)
         {
-			if( Npc.MeshObject != null )
+            _conversationPartner = conversationPartner;
+            if( Npc.MeshObject != null )
 				Npc.MeshObject.renderer.material.color = new Color(0.0f, 0.0f, 1.0f);
         }
 
@@ -229,6 +238,12 @@ public class NPCController : MonoBehaviour
         public override void PrivacyInvaded()
         {
             Npc.DecreaseHappiness();
+        }
+
+        public override void PushPlayerAway(GameObject player)
+        {
+            base.PushPlayerAway(player);
+            _conversationPartner._state = new IdleState(_conversationPartner);
         }
     }
 
@@ -274,7 +289,7 @@ public class NPCController : MonoBehaviour
 
     float GetDistance(GameObject that)
     {
-        Vector3 distance = that.transform.position - transform.position;
+        var distance = that.transform.position - transform.position;
         return distance.magnitude;
     }
 
@@ -325,7 +340,7 @@ public class NPCController : MonoBehaviour
                 _state.PushPlayerAway(Player);
             }
         }
-        else
+        else if (!_hostile)
         {
             // TODO(jrgfogh): Move this to State?
             IncreaseHappiness();
