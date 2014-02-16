@@ -23,6 +23,7 @@ public class BillboardController : MonoBehaviour {
 	void Update(){
 		if(amActive==true){
 			myContainer.transform.LookAt(myContainer.transform.position + m_Camera.transform.rotation * Vector3.back, m_Camera.transform.rotation * Vector3.up);
+			myContainer.transform.position = gameObject.transform.position;
 		}
 	}
 
