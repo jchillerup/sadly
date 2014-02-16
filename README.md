@@ -4,7 +4,7 @@ Sadly, you weren't invited
 
 <img src="http://i.imgur.com/5TGJE3B.jpg">
 
-Sadly, you weren't invited to your niece's wedding day. Last time you spent time together was, quite literally, a disaster. At parties you seem to have a knack for manifesting your presence quite thoroughly, much to the chagrin of the rest of those invited. Frankly, your family is falling apart, your last friend abandoned you sometime in March of last year, unpaid bills are piling up in your condo, and you are all out of toilet paper. Notwithstanding, you decide to go anyway...
+Sadly, you weren't invited to your niece's wedding day. Last time you spent time together was, quite literally, a disaster. At parties you seem to have a knack for manifesting your presence quite thoroughly, much to the chagrin of the rest of those invited. Frankly, your family is falling apart, your last friend abandoned you sometime in March of last year, unpaid bills are piling up in your condo, and you are all out of gum. Notwithstanding, you decide to go anyway...
 
 Privacy
 -------
