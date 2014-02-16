@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour {
 		if (!_controller.isGrounded)
 			_controller.Move (Physics.gravity * Time.deltaTime);
 
-
 		if( (transform.position - _lastPosition).magnitude* 10 > 0.1f )
 		{
 			GetComponent<Animator>().SetBool("Walking", true);
@@ -89,7 +88,6 @@ public class PlayerController : MonoBehaviour {
 
 			foreach(var obj in interactables) {
 				var dist = obj.transform.position - this.transform.position;
-				Debug.Log(dist.magnitude);
 				if (dist.magnitude < 2.5) {
 
 					foreach (var component in obj.GetComponents<Interactable>()) {
