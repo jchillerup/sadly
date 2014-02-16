@@ -45,37 +45,39 @@ public class PointGiver
                     PointGiverObject.transform.position +
                     new Vector3(Random.Range(-4.0f, 4.0f), Random.Range(-4.0f, 4.0f) + 2.0f, Random.Range(-4.0f, 4.0f)),
                     Quaternion.Euler(27.33f, 226.9f, 0.0f));
-
+		float scale = 1.0f;
         switch (points)
         {
             case Points.Ten:
+				scale = Random.Range (0.7f, 1.3f);
                 pu.GetComponent<PowerUpSprite>().UiTexture = _ten;
-                pu.transform.localScale = new Vector3(Random.Range(0.5f, 1.0f), Random.Range(0.5f, 1.0f), Random.Range(0.5f, 1.0f));
+                
                 break;
             case Points.TwentyFive:
                 pu.GetComponent<PowerUpSprite>().UiTexture = _twentyFive;
-                pu.transform.localScale = new Vector3(Random.Range(0.5f, 1.0f), Random.Range(0.5f, 1.0f), Random.Range(0.5f, 1.0f));
+			scale = Random.Range (0.7f, 1.3f);
                 break;
             case Points.Fifty:
                 pu.GetComponent<PowerUpSprite>().UiTexture = _fifty;
-                pu.transform.localScale = new Vector3(Random.Range(0.5f, 2.0f), Random.Range(0.5f, 2.0f), Random.Range(0.5f, 2.0f));
+			scale = Random.Range (0.7f, 1.3f);
                 break;
             case Points.MulTwo:
                 pu.GetComponent<PowerUpSprite>().UiTexture = _mulTwo;
-                pu.transform.localScale = new Vector3(Random.Range(1.0f, 3.0f), Random.Range(1.0f, 3.0f), Random.Range(1.0f, 3.0f));
+			scale = Random.Range (1.7f, 2.3f);
                 break;
             case Points.MulFive:
                 pu.GetComponent<PowerUpSprite>().UiTexture = _mulFive;
-                pu.transform.localScale = new Vector3(Random.Range(1.0f, 3.0f), Random.Range(1.0f, 3.0f), Random.Range(1.0f, 3.0f));
+			scale = Random.Range (1.7f, 2.3f);
                 break;
             case Points.MulTen:
                 pu.GetComponent<PowerUpSprite>().UiTexture = _mulTen;
-                pu.transform.localScale = new Vector3(Random.Range(2.0f, 5.0f), Random.Range(2.0f, 5.0f), Random.Range(2.0f, 5.0f));
+			scale = Random.Range (1.7f, 2.3f);;
                 break;
             default:
                 pu.GetComponent<PowerUpSprite>().UiTexture = _ten;
                 break;
         }
+		pu.transform.localScale = new Vector3(scale, scale, scale);
 
     }
 }

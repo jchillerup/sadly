@@ -23,18 +23,17 @@ public class GameStartGUI : MonoBehaviour {
 		int buttonOffsetX = Mathf.FloorToInt((Screen.width - buttonWidth)/2);
 
 		GUI.DrawTexture(new Rect(logoOffsetX, logoOffsetY , logoWidth, logoHeight), logo);
-		if (GUI.Button(new Rect(buttonOffsetX, logoOffsetY + logoHeight + 100, buttonWidth, buttonHeight), button)) {
-			this.enabled = false;
-		}
+		
 	}
 
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if( Time.time > 5.0f )
+			this.enabled = false;
 	}
 }

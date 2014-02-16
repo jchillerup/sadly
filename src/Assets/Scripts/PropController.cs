@@ -28,18 +28,29 @@ public class PropController : MonoBehaviour {
 		if (body == null || body.isKinematic)
 			return;
 		
-		if( hit.relativeVelocity.magnitude > 2.0f )
+		int points = 0;
+		if( hit.relativeVelocity.magnitude > 2.0f ) {
+			points = 50;
 			_giver.ShowPoints(PointGiver.Points.Fifty);
-		else if( hit.relativeVelocity.magnitude > 1.5f )
+		} else if( hit.relativeVelocity.magnitude > 1.5f ) {
+			points = 25;
 			_giver.ShowPoints(PointGiver.Points.TwentyFive);
-		else if( hit.relativeVelocity.magnitude > 0.6f )
+		} else if( hit.relativeVelocity.magnitude > 0.6f ) {
+			points = 10;
 			_giver.ShowPoints(PointGiver.Points.Ten);
-
-		if( hit.relativeVelocity.magnitude > 2.0f && Random.Range(0.0f, 1.0f) > 0.5f )
+		}
+		if( hit.relativeVelocity.magnitude > 2.0f && Random.Range(0.0f, 1.0f) > 0.5f ) {
+			points *= 2;
 			_giver.ShowPoints(PointGiver.Points.MulTwo);
-		else if( hit.relativeVelocity.magnitude > 1.5f && Random.Range(0.0f, 1.0f) > 0.5f )
-			_giver.ShowPoints(PointGiver.Points.TwentyFive);
-		else if( hit.relativeVelocity.magnitude > 0.6f && Random.Range(0.0f, 1.0f) > 0.5f )
-			_giver.ShowPoints(PointGiver.Points.Ten);
+		} else if( hit.relativeVelocity.magnitude > 1.5f && Random.Range(0.0f, 1.0f) > 0.5f ) {
+			points *= 5;
+			_giver.ShowPoints(PointGiver.Points.MulFive);
+		} else if( hit.relativeVelocity.magnitude > 0.6f && Random.Range(0.0f, 1.0f) > 0.5f ) {
+			points *= 10;
+			_giver.ShowPoints(PointGiver.Points.MulTen);
+		}
+		var controller = GameObject.Find("Player").GetComponent<PlayerController>();
+		controller.AwardPointsWithoutShowing(points);
 	}
+
 }

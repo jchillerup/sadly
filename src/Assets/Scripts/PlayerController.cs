@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 _lastPosition = new Vector3();
 	public BillboardController Billboard;
 
+	public Transform LeftArm, RightArm;
+
 	private int _points;
 
 	Vector2 _time = new Vector2(), _timeAcceleration = new Vector2();
@@ -22,9 +24,6 @@ public class PlayerController : MonoBehaviour {
 
 		if (_controller == null)
 			_controller = gameObject.GetComponent<CharacterController> ();
-		
-		var moveVertical = Input.GetAxis ("Horizontal");
-		var moveHorizontal = Input.GetAxis ("Vertical");
 
 		_timeAcceleration += new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
 		_timeAcceleration = new Vector2(Mathf.Clamp(_timeAcceleration.x, -5, 5),
@@ -32,7 +31,7 @@ public class PlayerController : MonoBehaviour {
 
 		_time += _timeAcceleration * Time.deltaTime * 0.2f;
 
-		_moveSpeed += new Vector3 (-moveHorizontal, 0, moveVertical);
+		                               _moveSpeed += new Vector3 (-Input.GetAxis ("Vertical"), 0, Input.GetAxis ("Horizontal"));
 		_moveSpeed = new Vector3(Mathf.Clamp(_moveSpeed.x, -1.0f, 1.0f),
 		                 0,
 		                 Mathf.Clamp(_moveSpeed.z, -1.0f, 1.0f));
@@ -52,7 +51,7 @@ public class PlayerController : MonoBehaviour {
 		if( (transform.position - _lastPosition).magnitude* 10 > 0.1f )
 		{
 			GetComponent<Animator>().SetBool("Walking", true);
-			GetComponent<Animator>().speed = (transform.position - _lastPosition).magnitude* 10;
+			GetComponent<Animator>().speed = (transform.position - _lastPosition).magnitude* 20;
 		}
 		else
 		{
@@ -80,16 +79,26 @@ public class PlayerController : MonoBehaviour {
 		body.velocity = pushDir * PushPower;
 	}
 
+	void LateUpdate()
+	{
+		if( Input.GetButton("Fire1") )
+		{
+			RightArm.localRotation = Quaternion.Euler(new Vector3(0, Time.time*600, 90));
+			LeftArm.localRotation = Quaternion.Euler(new Vector3(0, Time.time*600 + 180, 90));
+		}
+	}
+
 	void Update() {
 
+		
 		// Space searches for InteractableObjects nearby and engages them if they are close enough.
-		if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Return)) {
+		if (Input.GetButtonDown("Fire1")) {
 			var interactables = GameObject.FindGameObjectsWithTag ("interactable");
 
 			foreach(var obj in interactables) {
 				var dist = obj.transform.position - transform.position;
 
-				if (dist.magnitude < 2.5) {
+				if (dist.magnitude < 3.6f) {
 
 					foreach (var component in obj.GetComponents<Interactable>()) {
 						if (component.GetType().GetMethod ("Interact") != null) {
@@ -106,7 +115,7 @@ public class PlayerController : MonoBehaviour {
 
     public void PushPlayerAway(NPCController npc)
     {
-		_pushSpeed += (transform.position - npc.transform.position) * 6 + new Vector3(0, 4, 0);
+		_pushSpeed += ((transform.position - npc.transform.position) * 6 + new Vector3(0, 1, 0)) * (float)Beverages/3.0f;
     }
 
 	PointGiver.Points ToEnum (int numPoints)
@@ -141,6 +150,11 @@ public class PlayerController : MonoBehaviour {
     {
         AwardPoints(numPoints, gameObject);
     }
+
+	public void AwardPointsWithoutShowing (int points)
+	{
+		_points += points;
+	}
 
 	public int GetPoints() {
 		return _points;
