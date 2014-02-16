@@ -23,7 +23,7 @@ public class NPCNavigator : MonoBehaviour
     public void WalkToRandomTarget()
     {
         // TODO(jrgfogh): Make this configurable.
-        var radius = 10.0f;
+        var radius = 30.0f;
         var hit = new NavMeshHit();
 
         while (!hit.hit)

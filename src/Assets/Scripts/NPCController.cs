@@ -133,13 +133,11 @@ public class NPCController : MonoBehaviour
 
         public override void FixedUpdate()
         {
-//			if (IsStationary ()) {
-				if (WantsToWalk ()) {
-					Npc.Navigator.WalkToRandomTarget ();
-				} else if (WantsToTalk ()) {
-					TryToInitiateTalk ();
-				}
-//			}
+			if (WantsToWalk ()) {
+				Npc._state = new IdleWalkingState(Npc);
+			} else if (WantsToTalk ()) {
+				TryToInitiateTalk ();
+			}
         }
 
         public override void PrivacyInvaded()
@@ -147,6 +145,31 @@ public class NPCController : MonoBehaviour
             Npc.DecreaseHappiness();
         }
     }
+
+	class IdleWalkingState : NpcState
+	{
+		public IdleWalkingState(NPCController npcController)
+			: base(npcController, true)
+		{
+			if( Npc.MeshObject != null )
+				Npc.MeshObject.renderer.material.color = new Color(1.0f, 0.5f, 0.0f);
+
+			Npc.Navigator.WalkToRandomTarget ();
+		}
+		
+		public override void FixedUpdate()
+		{
+			if( Npc.Navigator.HasReachedTarget() )
+			{
+				Npc._state = new IdleState(Npc);
+			}
+		}
+		
+		public override void PrivacyInvaded()
+		{
+			Npc.DecreaseHappiness();
+		}
+	}
 
     class GlaringState : NpcState
     {

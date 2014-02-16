@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour {
 		_moveSpeed *= MoveDamping;
 		_pushSpeed *= 0.95f;
 
-		var movement = _moveSpeed + new Vector3(Mathf.Sin(_time.x * 3), 0, Mathf.Cos(_time.y * 3)) * (Beverages*0.04f);
+		var movement = _moveSpeed + new Vector3(Mathf.Sin(_time.x * 3), 0, Mathf.Cos(_time.y * 3)) * (Beverages*0.04f) + _pushSpeed;
 		_controller.Move(movement * Speed * Time.deltaTime);
 
 		if( _moveSpeed.magnitude > 0.0001f )
@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour {
 
     public void PushPlayerAway(NPCController npc)
     {
-		_pushSpeed += transform.position - npc.transform.position;
+		_pushSpeed += (transform.position - npc.transform.position) * 10;
     }
 
 	public void AwardPoints(int numPoints) {
