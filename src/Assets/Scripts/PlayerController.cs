@@ -11,12 +11,14 @@ public class PlayerController : MonoBehaviour {
 	private Vector3 _drunkMoveSpeed = new Vector3();
 	private Vector3 _moveSpeed = new Vector3();
 	private Vector3 _pushSpeed = new Vector3();
+	private Vector3 _lastPosition = new Vector3();
 
 	private int Points;
 
 	Vector2 _time = new Vector2(), _timeAcceleration = new Vector2();
 
 	void FixedUpdate () {
+
 		if (_controller == null)
 			_controller = gameObject.GetComponent<CharacterController> ();
 		
@@ -45,6 +47,20 @@ public class PlayerController : MonoBehaviour {
 
 		if (!_controller.isGrounded)
 			_controller.Move (Physics.gravity * Time.deltaTime);
+
+
+		if( (transform.position - _lastPosition).magnitude* 10 > 0.1f )
+		{
+			GetComponent<Animator>().SetBool("Walking", true);
+			GetComponent<Animator>().speed = (transform.position - _lastPosition).magnitude* 10;
+		}
+		else
+		{
+			GetComponent<Animator>().SetBool("Walking", false);
+			GetComponent<Animator>().speed = 1.0f;
+		}
+
+		_lastPosition = transform.position;
 	}
 
 	void OnControllerColliderHit(ControllerColliderHit hit) {
@@ -89,7 +105,7 @@ public class PlayerController : MonoBehaviour {
 
     public void PushPlayerAway(NPCController npc)
     {
-		_pushSpeed += (transform.position - npc.transform.position) * 10;
+		_pushSpeed += (transform.position - npc.transform.position) * 6 + new Vector3(0, 4, 0);
     }
 
 	public void AwardPoints(int numPoints) {
