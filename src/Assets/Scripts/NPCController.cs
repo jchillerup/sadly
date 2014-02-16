@@ -286,34 +286,25 @@ public class NPCController : MonoBehaviour
         return Mathf.Abs(angle + FOVSizeInDegrees / 2) < FOVSizeInDegrees;
     }
 
-    void IncreaseHappiness(float howMuch)
+    void ChangeHappiness(float delta)
     {
-        _happiness = Mathf.Clamp(_happiness + howMuch, 0, 100);
+        _happiness = Mathf.Clamp(_happiness + delta, 0, 100);
+		Debug.Log (_happiness);
     }
 
     void IncreaseHappiness()
     {
-        IncreaseHappiness(HappinessIncrement * Time.deltaTime);
-    }
-
-    void DecreaseHappiness(float howMuch)
-    {
-        _happiness -= howMuch;
-
-        if (_happiness < 0)
-        {
-            _happiness = 0;
-        }
+		ChangeHappiness(HappinessIncrement * Time.deltaTime);
     }
 
     void DecreaseHappiness()
     {
-        DecreaseHappiness(HappinessDecrement * Time.deltaTime);
+		ChangeHappiness(- HappinessDecrement * Time.deltaTime);
     }
 
     void SeePlayer()
     {
-        DecreaseHappiness(EnterRoomPenalty);
+        ChangeHappiness(-EnterRoomPenalty);
         _hasSeenPlayer = true;
     }
 
@@ -324,7 +315,6 @@ public class NPCController : MonoBehaviour
         if (GetDistanceToPlayer() < _privateSphereThreshold)
         {
             _state.PrivacyInvaded();
-            // TODO(jrgfogh): Move this to State?
             if (_hostile)
             {
                 // If the NPC is hostile and the player is close, they will try to push her away.
