@@ -8,13 +8,12 @@ public class PlayerController : MonoBehaviour {
 	public float PushPower = 1.0f;
 
 	private CharacterController _controller;
-	private Vector3 _drunkMoveSpeed = new Vector3();
-	private Vector3 _moveSpeed = new Vector3();
+    private Vector3 _moveSpeed = new Vector3();
 	private Vector3 _pushSpeed = new Vector3();
 	private Vector3 _lastPosition = new Vector3();
-	public BillboardController billboard;
+	public BillboardController Billboard;
 
-	private int Points;
+	private int _points;
 
 	Vector2 _time = new Vector2(), _timeAcceleration = new Vector2();
 
@@ -87,7 +86,8 @@ public class PlayerController : MonoBehaviour {
 			var interactables = GameObject.FindGameObjectsWithTag ("interactable");
 
 			foreach(var obj in interactables) {
-				var dist = obj.transform.position - this.transform.position;
+				var dist = obj.transform.position - transform.position;
+
 				if (dist.magnitude < 2.5) {
 
 					foreach (var component in obj.GetComponents<Interactable>()) {
@@ -108,12 +108,17 @@ public class PlayerController : MonoBehaviour {
 		_pushSpeed += (transform.position - npc.transform.position) * 6 + new Vector3(0, 4, 0);
     }
 
-	public void AwardPoints(int numPoints) {
+	public void AwardPoints(int numPoints, GameObject sender) {
 		// TODO: Fireworks!
-		this.Points += numPoints;
+		_points += numPoints;
 	}
 
+    public void AwardPoints(int numPoints)
+    {
+        AwardPoints(numPoints, gameObject);
+    }
+
 	public int GetPoints() {
-		return this.Points;
+		return _points;
 	}
 }
