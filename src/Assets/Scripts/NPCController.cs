@@ -18,9 +18,9 @@ public class NPCController : MonoBehaviour
     public NPCNavigator Navigator;
     public float PrivateSphereThreshold = 1.7f;
     public float PointsPerUnhappiness = 500;
-	public GameObject angryFace;
-	public GameObject passiveFace;
-    public GameObject surprisedFace;
+	public GameObject AngryFace;
+	public GameObject PassiveFace;
+    public GameObject SurprisedFace;
 
     private bool _hostile = false;
     private float _happiness = 100;
@@ -62,6 +62,7 @@ public class NPCController : MonoBehaviour
         {
             var controller = player.GetComponent<PlayerController>();
             controller.PushPlayerAway(Npc);
+            Npc.Navigator.StopMoving();
             Npc._state = new PushingState(Npc);
         }
 
@@ -73,6 +74,7 @@ public class NPCController : MonoBehaviour
         protected virtual void ChangeNpcState(NpcState state)
         {
             Npc._state = state;
+            Npc.Navigator.StopMoving();
         }
     }
 
@@ -259,12 +261,14 @@ public class NPCController : MonoBehaviour
         {
             base.PushPlayerAway(player);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
 
         protected override void ChangeNpcState(NpcState state)
         {
             base.ChangeNpcState(state);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
     }
 
@@ -293,12 +297,14 @@ public class NPCController : MonoBehaviour
         {
             base.PushPlayerAway(player);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
 
         protected override void ChangeNpcState(NpcState state)
         {
             base.ChangeNpcState(state);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
     }
 
@@ -339,6 +345,7 @@ public class NPCController : MonoBehaviour
         {
             base.PushPlayerAway(player);
             _conversationPartner._state = new IdleState(_conversationPartner);
+            _conversationPartner.Navigator.StopMoving();
         }
 
         protected override void ChangeNpcState(NpcState state)
