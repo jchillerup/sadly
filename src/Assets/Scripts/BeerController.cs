@@ -14,7 +14,7 @@ public class BeerController : Interactable {
 			p.AwardPoints(PointsToDrink);
 			this.drank = true;
 		}
-		Vector3 direction = p.gameObject.transform.forward + new Vector3 (60f, 90f, 60f);
+		Vector3 direction = p.gameObject.transform.forward + new Vector3 (6f, 9f, 6f);
 
 		this.gameObject.rigidbody.AddForce (direction);
 	}
