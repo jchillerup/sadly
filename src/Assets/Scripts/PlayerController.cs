@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour {
 			var interactables = GameObject.FindGameObjectsWithTag ("interactable");
 
 			foreach(var obj in interactables) {
-				var dist = obj.transform.position - this.transform.position;
+				var dist = obj.transform.position - transform.position;
 				Debug.Log(dist.magnitude);
 				if (dist.magnitude < 2.5) {
 
@@ -112,10 +112,10 @@ public class PlayerController : MonoBehaviour {
 
 	public void AwardPoints(int numPoints) {
 		// TODO: Fireworks!
-		this.Points += numPoints;
+		Points += numPoints;
 	}
 
 	public int GetPoints() {
-		return this.Points;
+		return Points;
 	}
 }

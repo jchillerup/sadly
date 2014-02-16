@@ -17,14 +17,21 @@ public class NPCController : MonoBehaviour
     public float GlarePeriod = 5000;
     public NPCNavigator Navigator;
     public float PrivateSphereThreshold = 1.7f;
+    public float PointsPerUnhappiness = 500;
 	public GameObject angryFace;
 	public GameObject passiveFace;
-	public GameObject surprisedFace;
+    public GameObject surprisedFace;
 
     private bool _hostile = false;
     private float _happiness = 100;
     private bool _hasSeenPlayer = false;
     private NpcState _state;
+    private readonly PlayerController _playerController;
+
+    public NPCController()
+    {
+        _playerController = Player.GetComponent<PlayerController>();
+    }
 
     public bool CanTalk
     {
@@ -367,6 +374,10 @@ public class NPCController : MonoBehaviour
 
     void ChangeHappiness(float delta)
     {
+        if (0 < delta)
+        {
+            _playerController.AwardPoints((int)(delta * PointsPerUnhappiness));
+        }
         _happiness = Mathf.Clamp(_happiness + delta, 0, 100);
     }
 
@@ -377,7 +388,7 @@ public class NPCController : MonoBehaviour
 
     void DecreaseHappiness()
     {
-		ChangeHappiness(- HappinessDecrement * Time.deltaTime);
+		ChangeHappiness(- HappinessDecrement * (_playerController.Beverages + 1) * Time.deltaTime);
     }
 
     void SeePlayer()
