@@ -59,6 +59,16 @@ public class NPCController : MonoBehaviour
             controller.PushPlayerAway(Npc);
             Npc._state = new PushingState(Npc);
         }
+
+        public void SeePlayer()
+        {
+            ChangeNpcState(new GlaringState(Npc));
+        }
+
+        protected virtual void ChangeNpcState(NpcState state)
+        {
+            Npc._state = state;
+        }
     }
 
     class PushingState : NpcState
@@ -76,6 +86,11 @@ public class NPCController : MonoBehaviour
 
         public override void PrivacyInvaded()
         {
+        }
+
+        protected override void ChangeNpcState(NpcState state)
+        {
+            
         }
     }
 
@@ -240,6 +255,12 @@ public class NPCController : MonoBehaviour
             base.PushPlayerAway(player);
             _conversationPartner._state = new IdleState(_conversationPartner);
         }
+
+        protected override void ChangeNpcState(NpcState state)
+        {
+            base.ChangeNpcState(state);
+            _conversationPartner._state = new IdleState(_conversationPartner);
+        }
     }
 
     class WaitingState : NpcState
@@ -266,6 +287,12 @@ public class NPCController : MonoBehaviour
         public override void PushPlayerAway(GameObject player)
         {
             base.PushPlayerAway(player);
+            _conversationPartner._state = new IdleState(_conversationPartner);
+        }
+
+        protected override void ChangeNpcState(NpcState state)
+        {
+            base.ChangeNpcState(state);
             _conversationPartner._state = new IdleState(_conversationPartner);
         }
     }
@@ -308,6 +335,12 @@ public class NPCController : MonoBehaviour
             base.PushPlayerAway(player);
             _conversationPartner._state = new IdleState(_conversationPartner);
         }
+
+        protected override void ChangeNpcState(NpcState state)
+        {
+            base.ChangeNpcState(state);
+            _conversationPartner._state = new IdleState(_conversationPartner);
+        }
     }
 
     float GetDistance(GameObject that)
@@ -341,14 +374,12 @@ public class NPCController : MonoBehaviour
 
     void DecreaseHappiness()
     {
-        Debug.Log(_happiness);
-        Debug.Log(HappinessIncrement * Time.deltaTime);
-        Debug.Log(_happiness);
 		ChangeHappiness(- HappinessDecrement * Time.deltaTime);
     }
 
     void SeePlayer()
     {
+		_state.SeePlayer ();
         ChangeHappiness(-EnterRoomPenalty);
         _hasSeenPlayer = true;
     }
