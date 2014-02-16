@@ -17,6 +17,9 @@ public class NPCController : MonoBehaviour
     public float GlarePeriod = 5000;
     public NPCNavigator Navigator;
     public float PrivateSphereThreshold = 1.7f;
+	public GameObject angryFace;
+	public GameObject passiveFace;
+	public GameObject surprisedFace;
 
     private bool _hostile = false;
     private float _happiness = 100;
